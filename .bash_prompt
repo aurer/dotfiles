@@ -39,16 +39,15 @@ function git_info() {
     branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
 
     # Count number of changes
-    changes=":$(git status -s | wc -l | tr -d ' ')"
-    if [ "$changes" == "0" ]; then
-        changes='';
+    changes="$(git status -s | wc -l | tr -d ' ')"
+    if [ "$changes" == 0 ]; then
+        echo $black'on '$orange$branch
     else
-        changes=$red$changes;
+        echo $black'on '$orange$branch$red':'$changes
     fi
-
-    echo $black"on "$orange$branch$changes
 }
 
+# Color user details red when user is root
 if [ $EUID == "0" ]; then
     usercolor=$red;
 else
