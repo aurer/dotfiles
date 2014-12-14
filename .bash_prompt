@@ -44,8 +44,7 @@ function git_info() {
     echo $black"on "$orange$branch$purple$changes
 }
 
-default_user='phil'
-if [ $USER != "$default_user" ]; then
+if [ $EUID == "0" ]; then
     usercolor=$red;
 else
     usercolor=$cyan;
