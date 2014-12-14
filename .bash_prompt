@@ -59,7 +59,7 @@ __vcs_name() {
 
 __git_changes() {
     if  __has_parent_dir ".git"; then
-        echo "$(git status -s | wc -l | tr -d ' ')";
+        echo ":$(git status -s | wc -l | tr -d ' ')";
     fi
 }
 
@@ -69,4 +69,4 @@ if [ "$EUID" == "0" ]; then
 fi
 
 # Nicely formatted terminal prompt
-export PS1='\n\[$bold\]\[$black\]\[$userstyle\]\u - \[$userstyle\]\h \[$yellow\]\w \[$orange\]$(__vcs_name):$(__git_changes)\[$black\]\[$reset\]\n\[$userstyle\]➜\[$reset\] '
+export PS1='\n\[$bold\]\[$black\]\[$userstyle\]\u - \[$userstyle\]\h \[$yellow\]\w \[$orange\]$(__vcs_name)\[$purple\]$(__git_changes)\[$black\]\[$reset\]\n\[$userstyle\]➜\[$reset\] '
