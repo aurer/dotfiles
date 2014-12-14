@@ -38,10 +38,15 @@ function git_info() {
     # quickest check for what branch we're on
     branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
 
-    # check if it's dirty (via github.com/sindresorhus/pure)
+    # Count number of changes
     changes=":$(git status -s | wc -l | tr -d ' ')"
+    if [ "$changes" == "0" ]; then
+        changes='';
+    else
+        changes=$red$changes;
+    fi
 
-    echo $black"on "$orange$branch$purple$changes
+    echo $black"on "$orange$branch$changes
 }
 
 if [ $EUID == "0" ]; then
