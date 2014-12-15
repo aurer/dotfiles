@@ -116,4 +116,3 @@ fi
 
 # Nicely formatted terminal prompt 
 export PS1='\n\[$bold\]\[$black\][\[$usercolor\]\u:\[$usercolor\]\h\[$black\]] \[$black\][\[$yellow\]\w\[$black\]] $(git_info) \n\[$black\]➜\[$reset\] '
-export TERM=xterm-256color
