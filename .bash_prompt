@@ -31,20 +31,80 @@ else
     yellow="\e[1;33m";
 fi;
 
+function git_status() {
+    local modified=0;
+    local added=0;
+    local deleted=0;
+    local renamed=0;
+    local copied=0;
+    local untracked=0;
+    local ignored=0;
+
+    local output=$(git status -s 2>/dev/null)
+    
+    OIFS="${IFS}"
+    IFS=$'\n'
+    for line in ${output}; do
+        if   [[ $line == M* ]]; then
+            modified=$((modified+1));
+        elif [[ $line == A* ]]; then
+            added=$((added+1));
+        elif [[ $line == D* ]]; then
+            deleted=$((deleted+1));
+        elif [[ $line == R* ]]; then
+            renamed=$((renamed+1));
+        elif [[ $line == C* ]]; then
+            copied=$((copied+1));
+        elif [[ $line == ?* ]]; then
+            untracked=$((untracked+1))
+        elif [[ $line == !* ]]; then
+            ignored=$((ignored+1));
+        fi
+    done
+    IFS="${OIFS}"
+
+    s=''
+    if [ $modified != "0" ]; then
+        s+="${modified}S ";
+    fi
+    if [ $added != "0" ]; then
+        s+="${added}A ";
+    fi
+    if [ $deleted != "0" ]; then
+        s+="${deleted}D ";
+    fi
+    if [ $renamed != "0" ]; then
+        s+="${renamed}R ";
+    fi
+    if [ $copied != "0" ]; then
+        s+="${copied}C ";
+    fi
+    if [ $untracked != "0" ]; then
+        s+="${untracked}U ";
+    fi
+    if [ $ignored != "0" ]; then
+        s+="${ignored}I ";
+    fi;
+
+    echo $s
+}
+
 function git_info() {
     # check if we're in a git repo
     git rev-parse --is-inside-work-tree &>/dev/null || return
 
     # quickest check for what branch we're on
-    branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
+    local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
 
     # Count number of changes
-    changes="$(git status -s | wc -l | tr -d ' ')"
+    local s='';
+    local changes="$(git status -s | wc -l | tr -d ' ')"
     if [ "$changes" == 0 ]; then
-        echo $black'on '$orange$branch
+        s=$green'git:'$branch
     else
-        echo $black'on '$orange$branch$red':'$changes
+        s=$blue'git:'$branch' '$(git_status)
     fi
+    echo $black'['$s$black']';
 }
 
 # Color user details red when user is root
@@ -55,4 +115,4 @@ else
 fi
 
 # Nicely formatted terminal prompt 
-export PS1='\n\[$bold\]\[$black\]\[$usercolor\]\u \[$black\]at \[$usercolor\]\h \[$black\]in \[$yellow\]\w $(git_info)\[$black\]\[$reset\]\n\[$black\]➜\[$reset\] '
+export PS1='\n\[$bold\]\[$black\][\[$usercolor\]\u:\[$usercolor\]\h\[$black\]] \[$black\][\[$yellow\]\w\[$black\]] $(git_info) \n\[$black\]➜\[$reset\] '
