@@ -68,4 +68,4 @@ alias gd="git diff"
 alias grm="git rm"
 
 # Vagrant shortcuts
-alias vagrant_start="vagrant up && vagrant ssh"
+alias vagrant_start="vagrant up --no-provision && vagrant ssh"
