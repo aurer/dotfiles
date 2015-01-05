@@ -11,6 +11,11 @@ alias -- -="cd -"
 #alias h="history"
 #alias j="jobs"
 
+# Normalise the open function
+if hash xdg-open 2>/dev/null; then
+	alias open="xdg-open"
+fi
+
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
 	colorflag="--color"

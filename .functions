@@ -48,15 +48,6 @@ if [ $? -eq 0 ]; then
 	}
 fi
 
-# Normalise the open function
-function open() {
-	if hash xdg-open 2>/dev/null; then
-		xdg-open "$@";
-	else
-		open "$@";
-	fi
-}
-
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
 	local port="${1:-8000}"
