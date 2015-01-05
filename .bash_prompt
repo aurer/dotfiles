@@ -3,7 +3,6 @@ if [ -f /etc/bash_completion ]; then
 fi
 
 if tput setaf 1 &> /dev/null; then
-    tput sgr0; # reset colors
     bold=$(tput bold);
     reset=$(tput sgr0);
     black=$(tput setaf 0);
@@ -41,7 +40,7 @@ function git_status() {
     local ignored=0;
 
     local output=$(git status -s 2>/dev/null)
-    
+
     OIFS="${IFS}"
     IFS=$'\n'
     for line in ${output}; do
@@ -114,5 +113,5 @@ else
     usercolor=$cyan;
 fi
 
-# Nicely formatted terminal prompt 
+# Nicely formatted terminal prompt
 export PS1='\n\[$bold\]\[$black\][\[$usercolor\]\u:\[$usercolor\]\h\[$black\]] \[$black\][\[$yellow\]\w\[$black\]] $(git_info) \n\[$black\]➜\[$reset\] '
