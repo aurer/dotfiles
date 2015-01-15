@@ -64,28 +64,41 @@ function git_status() {
 
     s=''
     if [ $modified != "0" ]; then
-        s+="${modified}S ";
+        s+="$yellow^${modified} ";
     fi
     if [ $added != "0" ]; then
-        s+="${added}A ";
+        s+="$green+${added} ";
     fi
     if [ $deleted != "0" ]; then
-        s+="${deleted}D ";
+        s+="$red-${deleted} ";
     fi
     if [ $renamed != "0" ]; then
-        s+="${renamed}R ";
+        s+="$green*${renamed} ";
     fi
     if [ $copied != "0" ]; then
-        s+="${copied}C ";
+        s+="$green*${copied} ";
     fi
     if [ $untracked != "0" ]; then
-        s+="${untracked}U ";
+        s+="$green*${untracked} ";
     fi
     if [ $ignored != "0" ]; then
-        s+="${ignored}I ";
+        s+="$white\${ignored} ";
     fi;
 
     echo $s
+}
+
+function git_branch_status() {
+     # check if we're in a git repo
+    git rev-parse --is-inside-work-tree &>/dev/null || return
+
+    local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
+    local ahead=$(git rev-list --left-right $branch...origin/$branch | grep -c '^<' | tr -d ' ')
+    local behind=$(git rev-list --left-right $branch...origin/$branch | grep -c '^>' | tr -d ' ')
+    local out=""
+    if [ $ahead -gt "0" ]; then out+="↑$ahead"; fi
+    if [ $behind -gt "0" ]; then out+="↓$behind"; fi
+    if [ "$out" != "" ]; then echo $blue $out; fi
 }
 
 function git_info() {
@@ -101,10 +114,11 @@ function git_info() {
     if [ "$changes" == 0 ]; then
         s=$green'git:'$branch
     else
-        s=$blue'git:'$branch' '$(git_status)
+        s=$orange'git:'$branch' '$(git_status)
     fi
-    echo $black'['$s$black']';
+    echo $black'['$s$(git_branch_status)$black']';
 }
+
 
 # Color user details red when user is root
 if [ $EUID == "0" ]; then
