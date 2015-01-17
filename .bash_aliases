@@ -64,6 +64,9 @@ alias reload="exec $SHELL -l"
 # Faster npm for europeans
 command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.eu"
 
+# Default ping to 5 pings and shorter timeout
+alias ping='ping -c 5 -t 3'
+
 # Git shortcuts
 alias gs="git status"
 alias ga="git add"
