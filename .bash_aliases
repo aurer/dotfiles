@@ -71,7 +71,8 @@ alias ping='ping -c 5 -t 3'
 alias gs="git status"
 alias ga="git add"
 alias gb="git branch"
-alias gc="git commit -m"
+alias gc="git commit"
+alias gf="git fetch origin"
 alias gd="git diff"
 alias grm="git rm"
 
