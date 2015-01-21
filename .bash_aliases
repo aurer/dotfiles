@@ -3,13 +3,8 @@ alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
-alias ~="cd ~" # `cd` is probably faster to type though
-alias -- -="cd -"
-
-# Shortcuts
-#alias g="git"
-#alias h="history"
-#alias j="jobs"
+alias ......="cd ../../../../.."
+alias --="cd -"
 
 # Normalise the open function
 if hash xdg-open 2>/dev/null; then
@@ -32,6 +27,7 @@ alias la="ls -laF ${colorflag}"
 
 # List only directories
 alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+
 
 # Always use color output for `ls`
 alias ls="command ls ${colorflag}"
@@ -67,7 +63,12 @@ command -v npm > /dev/null && alias npme="npm --registry http://registry.npmjs.e
 # Default ping to 5 pings and shorter timeout
 alias ping='ping -c 5 -t 3'
 
+# Be nice
+alias please="sudo"
+alias hosts="sudo $EDITOR /etc/hosts"
+
 # Git shortcuts
+alias g="git"
 alias gs="git status"
 alias ga="git add"
 alias gb="git branch"
@@ -79,3 +80,6 @@ alias gp="git push"
 
 # Vagrant shortcuts
 alias vagrant_start="vagrant up --no-provision && vagrant ssh"
+
+# Programs
+alias v="vim"
