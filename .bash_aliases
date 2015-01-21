@@ -4,7 +4,6 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
-alias --="cd -"
 
 # Normalise the open function
 if hash xdg-open 2>/dev/null; then
