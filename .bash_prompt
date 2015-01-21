@@ -93,12 +93,13 @@ function git_branch_status() {
     git rev-parse --is-inside-work-tree &>/dev/null || return
 
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
-    local ahead=$(git rev-list --left-right $branch...origin/$branch | grep -c '^<' | tr -d ' ')
-    local behind=$(git rev-list --left-right $branch...origin/$branch | grep -c '^>' | tr -d ' ')
+    local ahead=$(git rev-list --left-right $branch...origin 2>/dev/null | grep -c '^<' | tr -d ' ')
+    local behind=$(git rev-list --left-right $branch...origin 2>/dev/null | grep -c '^>' | tr -d ' ')
     local out=""
-    if [ $ahead -gt "0" ]; then out+="↑$ahead"; fi
-    if [ $behind -gt "0" ]; then out+="↓$behind"; fi
-    if [ "$out" != "" ]; then echo $blue $out; fi
+    if [[ "$ahead" -gt 0 ]]; then out+="↑$ahead"; fi
+    if [[ "$behind" -gt 0 ]]; then out+="↓$behind"; fi
+    if [[ "$out" != "" ]]; then echo $blue $out; fi
+    # echo $ahead
 }
 
 function git_info() {
@@ -116,6 +117,7 @@ function git_info() {
     else
         s=$orange'git:'$branch' '$(git_status)
     fi
+    # echo $black'['$s$black']';
     echo $black'['$s$(git_branch_status)$black']';
 }
 
