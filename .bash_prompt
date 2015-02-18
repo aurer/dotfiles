@@ -108,14 +108,15 @@ function git_info() {
 
     # quickest check for what branch we're on
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
+    local tag=$(git describe 2>/dev/null)
 
     # Count number of changes
     local s='';
     local changes="$(git status -s | wc -l | tr -d ' ')"
     if [ "$changes" == 0 ]; then
-        s=$green'git:'$branch
+        s=$green'git:'$branch$tag
     else
-        s=$orange'git:'$branch' '$(git_status)
+        s=$orange'git:'$branch$tag' '$(git_status)
     fi
     # echo $black'['$s$black']';
     echo $black'['$s$(git_branch_status)$black']';
