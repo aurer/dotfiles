@@ -83,7 +83,7 @@ function git_status() {
     fi
     if [ $ignored != "0" ]; then
         s+="$white\${ignored} ";
-    fi;
+    fi
 
     echo $s
 }
@@ -110,14 +110,26 @@ function git_info() {
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
     local tag=$(git describe 2>/dev/null)
 
+    if [ "$branch" = "" ] && [ "$tag" != "" ]; then
+        branch=$branch#$tag
+    fi
+    
+
     # Count number of changes
     local s='';
     local changes="$(git status -s | wc -l | tr -d ' ')"
     if [ "$changes" == 0 ]; then
-        s=$green'git:'$branch$tag
+        s=$green'git:'$branch
     else
-        s=$orange'git:'$branch$tag' '$(git_status)
+        s=$orange'git:'$branch' '$(git_status)
     fi
+
+    # Check for stashes
+    local stashes=$(git stash list | wc -l | tr -d ' ')
+    if [ $stashes != "0" ]; then
+        s+="$blue ⚑$stashes";
+    fi
+
     # echo $black'['$s$black']';
     echo $black'['$s$(git_branch_status)$black']';
 }
