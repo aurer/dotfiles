@@ -69,7 +69,7 @@ alias hosts="sudo $EDITOR /etc/hosts"
 
 # Git shortcuts
 alias g="git"
-alias gs="git status"
+alias gs="git status -s"
 alias ga="git add"
 alias gb="git branch"
 alias gc="git commit"
