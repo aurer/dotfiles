@@ -113,7 +113,7 @@ function git_info() {
     if [ "$branch" = "" ] && [ "$tag" != "" ]; then
         branch=$branch#$tag
     fi
-    
+
 
     # Count number of changes
     local s='';
@@ -127,7 +127,7 @@ function git_info() {
     # Check for stashes
     local stashes=$(git stash list | wc -l | tr -d ' ')
     if [ $stashes != "0" ]; then
-        s+="$blue ⚑$stashes";
+        s+="$orange ⚑$stashes";
     fi
 
     # echo $black'['$s$black']';
