@@ -140,8 +140,8 @@ function git_info() {
 if [ $EUID == "0" ]; then
     usercolor=$red;
 else
-    usercolor=$cyan;
+    usercolor=$blue;
 fi
 
 # Nicely formatted terminal prompt
-export PS1='\n\[$usercolor\]\u \[$grey\]\h \w  $(git_info) \n\[$usercolor\]›\[$reset\] '
+export PS1='\n\[$usercolor\]\u \[$cyan\]\h \w  $(git_info) \n\[$usercolor\]›\[$reset\] '
