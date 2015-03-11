@@ -47,7 +47,7 @@ syntax on
 set cursorline
 
 " Make tabs as wide as two spaces
-set tabstop=4
+set tabstop=2
 
 " Highlight searches
 set hlsearch
