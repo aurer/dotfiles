@@ -11,7 +11,7 @@ if tput setaf 1 &> /dev/null; then
     green=$(tput setaf 113);
     orange=$(tput setaf 172);
     pink=$(tput setaf 161);
-    red=$(tput setaf 124);
+    red=$(tput setaf 150);
     violet=$(tput setaf 103);
     yellow=$(tput setaf 214);
     white=$(tput setaf 15);
@@ -140,8 +140,8 @@ function git_info() {
 if [ $EUID == "0" ]; then
     usercolor=$red;
 else
-    usercolor=$blue;
+    usercolor=$green;
 fi
 
 # Nicely formatted terminal prompt
-export PS1='\n\[$usercolor\]\u \[$cyan\]\h \w  $(git_info) \n\[$usercolor\]›\[$reset\] '
+export PS1='\n\[$usercolor\]\u \[$blue\]\h:\[$cyan\]\w  $(git_info) \n\[$usercolor\]›\[$reset\] '
