@@ -9,6 +9,7 @@ for file in ~/.{path,bash_prompt,git_prompt,bash_aliases,exports,functions,extra
 done
 unset file
 
+# Add z jump
 source ~/bin/z.sh
 
 # Case-insensitive globbing (used in pathname expansion)
