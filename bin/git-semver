@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# check if we're in a git repo
+git rev-parse --is-inside-work-tree &>/dev/null || exit 1
+
+# Update and switch to master
+git pull
+git checkout master
+git merge origin/master
+git merge develop --ff-only
+
+# Merge in develop
+echo "OK to push? (y/n)"
+read push
+if [ "$push" != "y" ]; then exit 1; fi
+git push
+
+# Show current version and set new version
+echo
+echo "Current version: "
+git tags | sort -V | tail -1
+echo
+echo "Enter new version: "
+read version
+
+# Push and switch back to develop
+git tag $version
+git push --tags
+git checkout develop
