@@ -6,15 +6,16 @@ if tput setaf 1 &> /dev/null; then
     bold=$(tput bold);
     reset=$(tput sgr0);
     black=$(tput setaf 0);
-    blue=$(tput setaf 33);
-    cyan=$(tput setaf 37);
-    green=$(tput setaf 64);
-    orange=$(tput setaf 166);
-    purple=$(tput setaf 125);
+    blue=$(tput setaf 31);
+    cyan=$(tput setaf 115);
+    green=$(tput setaf 113);
+    orange=$(tput setaf 172);
+    pink=$(tput setaf 161);
     red=$(tput setaf 124);
-    violet=$(tput setaf 61);
+    violet=$(tput setaf 103);
+    yellow=$(tput setaf 214);
     white=$(tput setaf 15);
-    yellow=$(tput setaf 136);
+    grey=$(tput setaf 239);
 else
     bold='';
     reset="\e[0m";
@@ -28,6 +29,7 @@ else
     violet="\e[1;35m";
     white="\e[1;37m";
     yellow="\e[1;33m";
+    grey="\e[1;33m";
 fi;
 
 function git_status() {
@@ -64,22 +66,22 @@ function git_status() {
 
     s=''
     if [ $modified != "0" ]; then
-        s+="$yellow^${modified} ";
+        s+="$yellow*${modified} ";
     fi
     if [ $added != "0" ]; then
-        s+="$green+${added} ";
+        s+="$yellow+${added} ";
     fi
     if [ $deleted != "0" ]; then
         s+="$red-${deleted} ";
     fi
     if [ $renamed != "0" ]; then
-        s+="$green*${renamed} ";
+        s+="$yellow*${renamed} ";
     fi
     if [ $copied != "0" ]; then
-        s+="$green*${copied} ";
+        s+="$yellow*${copied} ";
     fi
     if [ $untracked != "0" ]; then
-        s+="$green*${untracked} ";
+        s+="$green?${untracked} ";
     fi
     if [ $ignored != "0" ]; then
         s+="$white\${ignored} ";
@@ -99,7 +101,6 @@ function git_branch_status() {
     if [[ "$ahead" -gt 0 ]]; then out+="↑$ahead"; fi
     if [[ "$behind" -gt 0 ]]; then out+="↓$behind"; fi
     if [[ "$out" != "" ]]; then echo $blue $out; fi
-    # echo $ahead
 }
 
 function git_info() {
@@ -119,9 +120,9 @@ function git_info() {
     local s='';
     local changes="$(git status -s | wc -l | tr -d ' ')"
     if [ "$changes" == 0 ]; then
-        s=$green'git:'$branch
+        s=$green$branch
     else
-        s=$orange'git:'$branch' '$(git_status)
+        s=$orange$branch' '$(git_status)
     fi
 
     # Check for stashes
@@ -131,7 +132,7 @@ function git_info() {
     fi
 
     # echo $black'['$s$black']';
-    echo $black'['$s$(git_branch_status)$black']';
+    echo $s$(git_branch_status);
 }
 
 
@@ -143,4 +144,4 @@ else
 fi
 
 # Nicely formatted terminal prompt
-export PS1='\n\[$bold\]\[$black\][\[$usercolor\]\u:\[$usercolor\]\h\[$black\]] \[$black\][\[$yellow\]\w\[$black\]] $(git_info) \n\[$black\]➜\[$reset\] '
+export PS1='\n\[$usercolor\]\u \[$grey\]\h \w  $(git_info) \n\[$usercolor\]›\[$reset\] '
