@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+
+print "What is the respository name: "
+repo_name = gets.chomp
+repo_url = "git@bitbucket.org:greeneking/#{repo_name}.git"
+
+puts "Checking out #{repo_url}"
+
+db = exec "mysql -u root -e 'create database if not exists #{repo_name}_local_develop'"
+puts db
+# cd /srv/build
+
+# mkdir -p ipa/logs
+# mkdir -p ipa/webroot
+# cd ipa/webroot
+# git clone git@bitbucket.org:greeneking/ipa.git .
+# drush make ipa.make --working-copy
+# drush @ipa.stage.develop mysql-dump > ipa-stage-develop.sql
