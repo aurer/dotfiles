@@ -1,7 +1,12 @@
 #!/usr/bin/env ruby
 
 class GK
-	def self.setup_site
+
+	##
+	# Clone and make a site
+	##
+	def self.setup_site(*sitename)
+
 		# Show a warning if we're not in /srv directory
 		if !Dir.pwd.start_with?('/srv')
 			puts "This command should be run from /srv/build or similar"
@@ -9,8 +14,10 @@ class GK
 		end
 
 		# Get the sites name
-		print "Site to clone: "
-		sitename = gets.chomp
+		if sitename.empty?
+			print "Site to clone: "
+			sitename = gets.chomp
+		end
 
 		# Get the branch (default to develop)
 		print "Branch (develop): "
@@ -36,8 +43,22 @@ class GK
 		end
 	end
 
-	def self.import_db
-		puts "Importing db"
+	def self.db_sync(*sitename)
+		if sitename.empty?
+			print "Sitename: "
+			sitename = gets.chomp
+		end
+
+		system "drush sql-sync @#{sitename}.stage.develop @#{sitename}.local.develop -y --create-db"
+	end
+
+	def self.file_sync(*sitename)
+		if sitename.empty?
+			print "Sitename: "
+			sitename = gets.chomp
+		end
+
+		system "drush -y --mode=zrpt rsync @#{sitename}.stage.develop:%files @#{sitename}.local.develop:%files --delete"
 	end
 
 	def self.show_available_functions
@@ -55,8 +76,9 @@ end
 
 # Run commands
 if ARGV.length > 0
-	command = ARGV.shift
-	GK.send(command.gsub(/-/, '_'))
+	command = ARGV.shift.gsub(/-/, '_')
+	arguments = ARGV
+	GK.send(command, *arguments)
 else
 	GK.show_available_functions
 end
