@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+
+class GK
+	def self.setup_site
+		# Show a warning if we're not in /srv directory
+		if !Dir.pwd.start_with?('/srv')
+			puts "This command should be run from /srv/build or similar"
+			puts "-----------------------------------------------------"
+		end
+
+		# Get the sites name
+		print "Site to clone: "
+		sitename = gets.chomp
+
+		# Get the branch (default to develop)
+		print "Branch (develop): "
+		branch = gets.chomp
+		branch = 'develop' if branch.empty?
+
+		# Get the branch (default to develop)
+		print "Make the site? (Y/n): "
+		make = gets.chomp.downcase == 'y' ? true : false
+
+		# Set up git url
+		git_url = "git@bitbucket.org:greeneking/#{sitename}.git"
+
+		# Clone site
+		system "mkdir -p #{sitename}/#{branch}/logs"
+		Dir.chdir Dir.pwd + "/#{sitename}/#{branch}"
+		system "git clone #{git_url} webroot && cd webroot && git checkout #{branch}"
+
+		# Make site
+		if make
+			Dir.chdir Dir.pwd + "/webroot"
+			system "drush make #{sitename}.make --working-copy"
+		end
+	end
+
+	def self.import_db
+		puts "Importing db"
+	end
+
+	def self.show_available_functions
+		puts
+		puts "Available functions are:"
+		puts "------------------------"
+		puts "setup-site"
+		puts "import-db"
+	end
+
+	def self.method_missing(m, *args, &block)
+		show_available_functions
+	end
+end
+
+# Run commands
+if ARGV.length > 0
+	command = ARGV.shift
+	GK.send(command.gsub(/-/, '_'))
+else
+	GK.show_available_functions
+end
