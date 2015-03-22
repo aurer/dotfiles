@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby
 
 class GK
-
-	##
+	#
 	# Clone and make a site
-	##
+	#
 	def self.setup_site(*sitename)
 
 		# Show a warning if we're not in /srv directory
@@ -43,6 +42,9 @@ class GK
 		end
 	end
 
+	#
+	# Sync a local database to the stage site
+	#
 	def self.db_sync(*sitename)
 		if sitename.empty?
 			print "Sitename: "
@@ -52,6 +54,9 @@ class GK
 		system "drush sql-sync @#{sitename}.stage.develop @#{sitename}.local.develop -y --create-db"
 	end
 
+	#
+	# Sync local files to the stage site
+	#
 	def self.file_sync(*sitename)
 		if sitename.empty?
 			print "Sitename: "
@@ -61,18 +66,51 @@ class GK
 		system "drush -y --mode=zrpt rsync @#{sitename}.stage.develop:%files @#{sitename}.local.develop:%files --delete"
 	end
 
-	def self.show_available_functions
-		puts
-		puts "Available functions are:"
-		puts "------------------------"
-		puts "setup-site"
-		puts "import-db"
+	#
+	# Sync both database and files to the stage site
+	#
+	def self.site_sync(*sitename)
+		if sitename.empty?
+			print "Sitename: "
+			sitename = gets.chomp
+		end
+
+		self.db_sync sitename
+		self.file_sync sitename
 	end
 
+	#
+	# Show a list of valid commands
+	#
+	def self.show_available_functions
+		puts
+		puts color("Available commands", 'yellow')
+		puts color("setup-site", 'green') + "     Create site structure, checkout site and make it"
+		puts color("db-sync", 'green') + "        Create/sync database with stage site"
+		puts color("file-sync", 'green') + "      Download/sync files with stage site"
+		puts color("site_sync", 'green') + "      Run db-sync and file-sync"
+	end
+
+	#
+	# If an invalid command is passed, show valid commands
+	#
 	def self.method_missing(m, *args, &block)
 		show_available_functions
 	end
 end
+
+#
+# Colorise output to terminal
+#
+def color(string, color)
+	c = {
+		'red' 		=> "\e[1;31m",
+		'yellow' 	=> "\e[1;33m",
+		'green' 	=> "\e[1;32m",
+	}
+	"#{c[color]}#{string}\e[1;0m"
+end
+
 
 # Run commands
 if ARGV.length > 0
