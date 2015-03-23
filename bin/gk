@@ -134,11 +134,11 @@ class GK
 	def self.show_available_functions
 		puts
 		puts color("Available commands", 'yellow')
-		puts color("setup-site", 'green') + "     Create site structure, checkout site and make it"
-		puts color("db-sync", 'green') + "        Create/sync database with stage site"
-		puts color("file-sync", 'green') + "      Download/sync files with stage site"
-		puts color("site-sync", 'green') + "      Run db-sync and file-sync"
-		puts color("create-settings", 'green') + "Create database settings in settings.php"
+		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it"
+		puts color("db-sync", 'green') + "          Create/sync database with stage site"
+		puts color("file-sync", 'green') + "        Download/sync files with stage site"
+		puts color("site-sync", 'green') + "        Run db-sync and file-sync"
+		puts color("create-settings", 'green') + "  Create database settings in settings.php"
 	end
 
 	#
