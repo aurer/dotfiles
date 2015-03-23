@@ -99,7 +99,7 @@ class GK
 		settings_file = settings_root + "settings.php"
 
 		# Setup database settings
-		db_settings = "$databases = array(" +
+		db_settings = "$databases = array(\n" +
 			"	'default' => array (\n" +
 			"   	'default' => array (\n" +
 			"      'database' => '#{sitename}_local_#{branch}',\n" +
