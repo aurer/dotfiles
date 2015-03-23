@@ -23,8 +23,8 @@ class GK
 		branch = gets.chomp
 		branch = 'develop' if branch.empty?
 
-		# Get the branch (default to develop)
-		print "Make the site? (Y/n): "
+		# Run drush make?
+		print "Make the site? (y/N): "
 		make = gets.chomp.downcase == 'y' ? true : false
 
 		# Set up git url
@@ -115,9 +115,11 @@ class GK
 
 		# Backup existing settings file
 		if File.exists?(settings_file)
-			backup_file = settings_file.gsub('settings.php', 'previous.settings.php')
-			system "cp #{settings_file} #{backup_file}"
-			puts "Copied existsing settings to previous.settings.php"
+			print "Overwrite existing settings.php? (y/n): "
+			if gets.chomp.downcase != 'y'
+				puts 'Aborted'
+				exit
+			end
 		end
 
 		# Create new settings
