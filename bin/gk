@@ -4,7 +4,7 @@ class GK
 	#
 	# Clone and make a site
 	#
-	def self.setup_site(*sitename)
+	def self.setup_site(site, branch)
 
 		# Show a warning if we're not in /srv directory
 		if !Dir.pwd.start_with?('/srv')
@@ -12,89 +12,66 @@ class GK
 			puts "-----------------------------------------------------"
 		end
 
-		# Get the sites name
-		if sitename.empty?
-			print "Site to clone: "
-			sitename = gets.chomp
-		end
-
-		# Get the branch (default to develop)
-		print "Branch (develop): "
-		branch = gets.chomp
-		branch = 'develop' if branch.empty?
-
 		# Run drush make?
 		print "Make the site? (y/N): "
-		make = gets.chomp.downcase == 'y' ? true : false
+		make = STDIN.gets.chomp.downcase == 'y' ? true : false
 
 		# Set up git url
-		git_url = "git@bitbucket.org:greeneking/#{sitename}.git"
+		git_url = "git@bitbucket.org:greeneking/#{site}.git"
 
 		# Clone site
-		system "mkdir -p #{sitename}/#{branch}/logs"
-		Dir.chdir Dir.pwd + "/#{sitename}/#{branch}"
-		system "git clone #{git_url} webroot && cd webroot && git checkout #{branch}"
+		system "mkdir -p #{site}/#{branch}/logs"
+		Dir.chdir Dir.pwd + "/#{site}/#{branch}"
+		system "git clone #{git_url} webroot && cd webroot && git checkout #{branch.gsub('-', '/')}"
 
 		# Make site
 		if make
 			Dir.chdir Dir.pwd + "/webroot"
-			system "drush make #{sitename}.make --working-copy"
+			system "drush make #{site}.make --working-copy"
 		end
 	end
 
 	#
 	# Sync a local database to the stage site
 	#
-	def self.db_sync(*sitename)
-		if sitename.empty?
-			print "Sitename: "
-			sitename = gets.chomp
-		end
+	def self.db_sync(site, branch)
+		db_name = "#{site}_local_#{branch.gsub('-', '_')}"
 
-		system "drush sql-sync @#{sitename}.stage.develop @#{sitename}.local.develop -y --create-db"
+		db_exists = `mysql -e 'show databases' | grep #{db_name}`.strip == db_name
+
+		# If the database does not exist, import it from stage
+		if !db_exists
+			system "drush @#{site}.stage.#{branch} sql-dump > #{site}.stage.#{branch}.sql &&" +
+				 "mysql -e 'create database if not exists #{db_name}' &&" +
+				 "mysql #{db_name} < #{site}.stage.#{branch}.sql &&" +
+				 "rm #{site}.stage.#{branch}.sql &&" +
+				 "drush sql-sync @#{site}.stage.#{branch} @#{site}.local.#{branch} -y --create-db"
+		else
+			system "drush sql-sync @#{site}.stage.#{branch} @#{site}.local.#{branch} -y --create-db"
+		end
 	end
 
 	#
 	# Sync local files to the stage site
 	#
-	def self.file_sync(*sitename)
-		if sitename.empty?
-			print "Sitename: "
-			sitename = gets.chomp
-		end
-
-		system "drush -y --mode=zrpt rsync @#{sitename}.stage.develop:%files @#{sitename}.local.develop:%files --delete"
+	def self.file_sync(site, branch)
+		system "drush -y --mode=zrpt rsync @#{site}.stage.#{branch}:%files @#{site}.local.#{branch}:%files --delete"
 	end
 
 	#
 	# Sync both database and files to the stage site
 	#
-	def self.site_sync(*sitename)
-		if sitename.empty?
-			print "Sitename: "
-			sitename = gets.chomp
-		end
-
-		self.db_sync sitename
-		self.file_sync sitename
+	def self.site_sync(site, branch)
+		self.db_sync(site,branch)
+		self.file_sync(site,branch)
 	end
 
 	#
 	# Create database settings in settings.php
 	#
-	def self.create_settings(*sitename)
-		if sitename.empty?
-			print "Sitename: "
-			sitename = gets.chomp
-		end
-
-		# Get the branch (default to develop)
-		print "Branch (develop): "
-		branch = gets.chomp
-		branch = 'develop' if branch.empty?
-
+	def self.create_settings(site, branch)
 		# Get the settings files
-		settings_root = "/srv/build/#{sitename}/#{branch}/webroot/sites/default/"
+		settings_root = "/srv/build/#{site}/#{branch}/webroot/sites/default/"
 		default_settings_file = settings_root + "default.settings.php"
 		settings_file = settings_root + "settings.php"
 
@@ -102,7 +79,7 @@ class GK
 		db_settings = "$databases = array(\n" +
 			"	'default' => array (\n" +
 			"   	'default' => array (\n" +
-			"      'database' => '#{sitename}_local_#{branch}',\n" +
+			"      'database' => '#{site}_local_#{branch.gsub('-','_')}',\n" +
 			"      'username' => 'root',\n" +
 			"      'password' => '',\n" +
 			"      'host' => 'localhost',\n" +
@@ -116,7 +93,7 @@ class GK
 		# Backup existing settings file
 		if File.exists?(settings_file)
 			print "Overwrite existing settings.php? (y/n): "
-			if gets.chomp.downcase != 'y'
+			if STDIN.gets.chomp.downcase != 'y'
 				puts 'Aborted'
 				exit
 			end
@@ -127,7 +104,7 @@ class GK
 		new_settings_file = File.open(settings_file, 'w+')
 		new_settings_file.puts(new_settings)
 		new_settings_file.close
-		puts "Created settings.php with database set to #{sitename}_local_#{branch}"
+		puts "Created settings.php with database set to #{site}_local_#{branch}"
 	end
 
 	#
@@ -135,12 +112,15 @@ class GK
 	#
 	def self.show_available_functions
 		puts
+		puts color("Usage", 'yellow')
+		puts "gk <command> [site] [branch]"
+		puts
 		puts color("Available commands", 'yellow')
-		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it"
-		puts color("db-sync", 'green') + "          Create/sync database with stage site"
-		puts color("file-sync", 'green') + "        Download/sync files with stage site"
-		puts color("site-sync", 'green') + "        Run db-sync and file-sync"
-		puts color("create-settings", 'green') + "  Create database settings in settings.php"
+		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it."
+		puts color("db-sync", 'green') + "          Create/sync database with stage site."
+		puts color("file-sync", 'green') + "        Download/sync files with stage site."
+		puts color("site-sync", 'green') + "        Run db-sync and file-sync."
+		puts color("create-settings", 'green') + "  Create database settings in settings.php."
 	end
 
 	#
@@ -166,9 +146,22 @@ end
 
 # Run commands
 if ARGV.length > 0
-	command = ARGV.shift.gsub(/-/, '_')
-	arguments = ARGV
-	GK.send(command, *arguments)
+	# First argument is the command to run
+	command = ARGV[0].gsub('-', '_')
+
+	# Second argument is the site
+	site = ARGV[1]
+	if !site
+		print "Sitename: "
+		site = STDIN.gets.chomp
+	end
+
+	# Third argument is the branch
+	branch = ARGV[2]? ARGV[2] : 'develop'
+
+	# Run command with arguments
+	# puts command, site, branch
+	GK.send(command, site, branch)
 else
 	GK.show_available_functions
 end
