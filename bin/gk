@@ -80,6 +80,55 @@ class GK
 	end
 
 	#
+	# Create database settings in settings.php
+	#
+	def self.create_settings(*sitename)
+		if sitename.empty?
+			print "Sitename: "
+			sitename = gets.chomp
+		end
+
+		# Get the branch (default to develop)
+		print "Branch (develop): "
+		branch = gets.chomp
+		branch = 'develop' if branch.empty?
+
+		# Get the settings files
+		settings_root = "/srv/build/#{sitename}/#{branch}/webroot/sites/default/"
+		default_settings_file = settings_root + "default.settings.php"
+		settings_file = settings_root + "settings.php"
+
+		# Setup database settings
+		db_settings = "$databases = array(" +
+			"	'default' => array (\n" +
+			"   	'default' => array (\n" +
+			"      'database' => '#{sitename}_local_#{branch}',\n" +
+			"      'username' => 'root',\n" +
+			"      'password' => '',\n" +
+			"      'host' => 'localhost',\n" +
+			"      'port' => '',\n" +
+			"      'driver' => 'mysql',\n" +
+			"      'prefix' => '',\n" +
+			"    ),\n" +
+			"  ),\n" +
+			");"
+
+		# Backup existing settings file
+		if File.exists?(settings_file)
+			backup_file = settings_file.gsub('settings.php', 'previous.settings.php')
+			system "cp #{settings_file} #{backup_file}"
+			puts "Copied existsing settings to previous.settings.php"
+		end
+
+		# Create new settings
+		new_settings = File.read(default_settings_file).gsub(/^\$databases = array\(\);/, db_settings)
+		new_settings_file = File.open(settings_file, 'w+')
+		new_settings_file.puts(new_settings)
+		new_settings_file.close
+		puts "Created settings.php with database set to #{sitename}_local_#{branch}"
+	end
+
+	#
 	# Show a list of valid commands
 	#
 	def self.show_available_functions
@@ -88,7 +137,8 @@ class GK
 		puts color("setup-site", 'green') + "     Create site structure, checkout site and make it"
 		puts color("db-sync", 'green') + "        Create/sync database with stage site"
 		puts color("file-sync", 'green') + "      Download/sync files with stage site"
-		puts color("site_sync", 'green') + "      Run db-sync and file-sync"
+		puts color("site-sync", 'green') + "      Run db-sync and file-sync"
+		puts color("create-settings", 'green') + "Create database settings in settings.php"
 	end
 
 	#
