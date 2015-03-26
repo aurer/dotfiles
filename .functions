@@ -88,7 +88,7 @@ function tre() {
 	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }
 
-
+# Run git status -s on any git repository within the current directory
 function git_status_recursive() {
 	REPOS=($(find ./ -name .git | cut -c3-))
 	REPO_COUNT=${#REPOS[@]}
