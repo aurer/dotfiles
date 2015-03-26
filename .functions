@@ -87,3 +87,23 @@ function v() {
 function tre() {
 	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }
+
+
+function git_status_recursive() {
+	REPOS=($(find ./ -name .git | cut -c3-))
+	REPO_COUNT=${#REPOS[@]}
+	reset=$(tput sgr0);
+	green=$(tput setaf 113);
+	red=$(tput setaf 160);
+	if [ $REPO_COUNT = 0 ]; then
+		echo "${red}No repositories were found${reset}"
+	else
+		echo "${green}$REPO_COUNT repos found...${reset}"
+		for i in ${REPOS[@]}; do
+			cd "$i/.."
+			echo
+			tput setaf 172 && pwd && tput sgr0 && git status -s
+			cd - > /dev/null
+		done
+	fi
+}

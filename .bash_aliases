@@ -77,6 +77,7 @@ alias gf="git fetch origin"
 alias gd="git diff"
 alias grm="git rm"
 alias gp="git push"
+alias gsr="git_status_recursive"
 
 # Vagrant shortcuts
 alias vagrant_start="vagrant up --no-provision && vagrant ssh"
