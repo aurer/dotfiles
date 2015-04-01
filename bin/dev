@@ -125,7 +125,7 @@ class GK
 		puts color("site-sync", 'green') + "        Run db-sync and file-sync: site-sync <site> [branch_from [branch_to]]"
 		puts color("create-settings", 'green') + "  Create database settings in settings.php."
 		puts
-		puts "For db-sync, file-sync and site-sync, defaults to the 'develop' branch if none is supplied."
+		puts "db-sync, file-sync and site-sync, default to the 'develop' branch if none is supplied."
 	end
 
 	#
