@@ -34,36 +34,39 @@ class GK
 	#
 	# Sync a local database to the stage site
 	#
-	def self.db_sync(site, branch)
-		db_name = "#{site}_local_#{branch.gsub('-', '_')}"
-
+	def self.db_sync(site, *branch)
+		branch_from = branch[0]
+		branch_to = branch[1] ? branch[1] : branch[0]
+		db_name = "#{site}_local_#{branch_to.gsub('-', '_')}"
 		db_exists = `mysql -e 'show databases' | grep #{db_name}`.strip == db_name
 
 		# If the database does not exist, import it from stage
 		if !db_exists
-			system "drush @#{site}.stage.#{branch} sql-dump > #{site}.stage.#{branch}.sql &&" +
+			system "drush @#{site}.stage.#{branch_from} sql-dump > #{site}.stage.#{branch_to}.sql &&" +
 				 "mysql -e 'create database if not exists #{db_name}' &&" +
-				 "mysql #{db_name} < #{site}.stage.#{branch}.sql &&" +
-				 "rm #{site}.stage.#{branch}.sql &&" +
-				 "drush sql-sync @#{site}.stage.#{branch} @#{site}.local.#{branch} -y --create-db"
+				 "mysql #{db_name} < #{site}.stage.#{branch_to}.sql &&" +
+				 "rm #{site}.stage.#{branch_to}.sql &&" +
+				 "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
 		else
-			system "drush sql-sync @#{site}.stage.#{branch} @#{site}.local.#{branch} -y --create-db"
+			system "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
 		end
 	end
 
 	#
 	# Sync local files to the stage site
 	#
-	def self.file_sync(site, branch)
-		system "drush -y --mode=zrpt rsync @#{site}.stage.#{branch}:%files @#{site}.local.#{branch}:%files --delete"
+	def self.file_sync(site, *branch)
+		branch_from = branch[0]
+		branch_to = branch[1] ? branch[1] : branch[0]
+		system "drush -y --mode=zrpt rsync @#{site}.stage.#{branch_from}:%files @#{site}.local.#{branch_to}:%files --delete"
 	end
 
 	#
 	# Sync both database and files to the stage site
 	#
-	def self.site_sync(site, branch)
-		self.db_sync(site,branch)
-		self.file_sync(site,branch)
+	def self.site_sync(site, *branch)
+		self.db_sync(site,*branch)
+		self.file_sync(site,*branch)
 	end
 
 	#
@@ -117,10 +120,12 @@ class GK
 		puts
 		puts color("Available commands", 'yellow')
 		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it."
-		puts color("db-sync", 'green') + "          Create/sync database with stage site."
-		puts color("file-sync", 'green') + "        Download/sync files with stage site."
-		puts color("site-sync", 'green') + "        Run db-sync and file-sync."
+		puts color("db-sync", 'green') + "          Create/sync database with stage site: db-sync <site> [branch_from [branch_to]]."
+		puts color("file-sync", 'green') + "        Download/sync files with stage site: file-sync <site> [branch_from [branch_to]]"
+		puts color("site-sync", 'green') + "        Run db-sync and file-sync: site-sync <site> [branch_from [branch_to]]"
 		puts color("create-settings", 'green') + "  Create database settings in settings.php."
+		puts
+		puts "For db-sync, file-sync and site-sync, defaults to the 'develop' branch if none is supplied."
 	end
 
 	#
@@ -159,9 +164,12 @@ if ARGV.length > 0
 	# Third argument is the branch
 	branch = ARGV[2]? ARGV[2] : 'develop'
 
+	# Extra arguments if available
+	other = ARGV[3]? ARGV.slice(3) : nil
+
 	# Run command with arguments
 	# puts command, site, branch
-	GK.send(command, site, branch)
+	GK.send(command, site, branch, other)
 else
 	GK.show_available_functions
 end
