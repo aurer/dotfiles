@@ -4,7 +4,8 @@ class GK
 	#
 	# Clone and make a site
 	#
-	def self.setup_site(site, branch)
+	def self.setup_site(site, *branch)
+		branch = branch[0]
 
 		# Show a warning if we're not in /srv directory
 		if !Dir.pwd.start_with?('/srv')
@@ -22,20 +23,20 @@ class GK
 		# Clone site
 		system "mkdir -p #{site}/#{branch}/logs"
 		Dir.chdir Dir.pwd + "/#{site}/#{branch}"
-		system "git clone #{git_url} webroot && cd webroot && git checkout #{branch.gsub('-', '/')}"
+		system "git clone #{git_url} webroot && cd webroot && git checkout #{branch}"
 
 		# Make site
 		if make
 			Dir.chdir Dir.pwd + "/webroot"
-			system "drush make #{site}.make --working-copy"
+			system "drush make #{site}.make --working-copy && git reset --hard"
 		end
+
 	end
 
 	#
 	# Sync a local database to the stage site
 	#
 	def self.db_sync(site, *branch)
-		branch_from = branch[0]
 		branch_to = branch[1] ? branch[1] : branch[0]
 		db_name = "#{site}_local_#{branch_to.gsub('-', '_')}"
 		db_exists = `mysql -e 'show databases' | grep #{db_name}`.strip == db_name
@@ -72,7 +73,9 @@ class GK
 	#
 	# Create database settings in settings.php
 	#
-	def self.create_settings(site, branch)
+	def self.create_settings(site, *branch)
+		branch = branch[0]
+
 		# Get the settings files
 		settings_root = "/srv/build/#{site}/#{branch}/webroot/sites/default/"
 		default_settings_file = settings_root + "default.settings.php"
@@ -93,7 +96,7 @@ class GK
 			"  ),\n" +
 			");"
 
-		# Backup existing settings file
+		# Check if we should overwrite
 		if File.exists?(settings_file)
 			print "Overwrite existing settings.php? (y/n): "
 			if STDIN.gets.chomp.downcase != 'y'
