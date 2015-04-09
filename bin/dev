@@ -37,6 +37,7 @@ class GK
 	# Sync a local database to the stage site
 	#
 	def self.db_sync(site, *branch)
+		branch_from = branch[0]
 		branch_to = branch[1] ? branch[1] : branch[0]
 		db_name = "#{site}_local_#{branch_to.gsub('-', '_')}"
 		db_exists = `mysql -e 'show databases' | grep #{db_name}`.strip == db_name
@@ -66,8 +67,8 @@ class GK
 	# Sync both database and files to the stage site
 	#
 	def self.site_sync(site, *branch)
-		self.db_sync(site,*branch)
-		self.file_sync(site,*branch)
+		self.db_sync(site, *branch)
+		self.file_sync(site, *branch)
 	end
 
 	#
