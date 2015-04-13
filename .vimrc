@@ -85,6 +85,10 @@ set showcmd
 " Start scrolling three lines before the horizontal window border
 set scrolloff=3
 
+" Autoindent
+set autoindent
+set copyindent
+set preserveindent
 
 " Strip trailing whitespace (,ss)
 function! StripWhitespace()
