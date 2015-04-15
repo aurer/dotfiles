@@ -102,6 +102,19 @@ class NGX
   end
 
   #
+  # Show all Nginx virtual host configs
+  #
+  def self.vhost_list(*arguments)
+    configs = Dir['/etc/nginx/conf.d/**/*.conf']
+
+    if Dir['/etc/nginx/conf.d/'] == nil
+      puts "No nginx configs directory was found at '/etc/nginx/conf.d/'"
+    else
+      puts configs
+    end
+  end
+
+  #
   # Open a file in vim
   #
   def self._vim_file(file)
@@ -139,6 +152,7 @@ class NGX
 		puts "ngx <command> [options]"
 		puts
 		puts color("Available commands", 'yellow')
+    puts color("vhost-list", 'green') + "                      Show all Nginx virtual host config."
     puts color("vhost-create <site> [branch]", 'green') + "    Create an Nginx virtual host conf file."
     puts color("vhost-edit <site>", 'green') + "               Edit an Nginx virtual host conf file."
     puts color("vhost-remove <site>", 'green') + "             Remove an Nginx virtual host conf file."
