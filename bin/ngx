@@ -81,7 +81,7 @@ class NGX
 
     matches = Array.new
     configs.each do |conf|
-      if /\/[\w\.]+?#{search}[\w\.]+?.conf$/.match(conf)
+      if /\/([\w_\-\.]+)?#{search}([\w_\-\.]+)?.conf$/.match(conf)
         matches << conf
       end
     end
