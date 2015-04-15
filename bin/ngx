@@ -112,7 +112,12 @@ class NGX
 		puts "ngx <command> [options]"
 		puts
 		puts color("Available commands", 'yellow')
-		puts color("vhost-create [site] [branch]", 'green') + "    Create an Nginx virtual host conf file."
+    puts color("vhost-create <site> [branch]", 'green') + "    Create an Nginx virtual host conf file."
+    puts color("vhost-edit <site>", 'green') + "               Edit an Nginx virtual host conf file."
+    puts color("vhost-remove <site>", 'green') + "             Remove an Nginx virtual host conf file."
+    puts color("reload", 'green') + "                          Reload Nginx."
+    puts color("restart", 'green') + "                         Restart Nginx."
+		puts color("check", 'green') + "                           Show status and run configtest on Nginx."
   end
 end
 
