@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
 class NGX
+  #
+  # Create an Nginx virtual host config from the example files
+  #
   def self.vhost_create(*arguments)
 
     site = arguments[0]
@@ -35,6 +38,9 @@ class NGX
     puts new_content
   end
 
+  #
+  # Edit an Nginx virtual host config file in vim
+  #
   def self.vhost_edit(*arguments)
     search = arguments.first.first
     config_file = self._find_vhost_config(search)
@@ -46,6 +52,9 @@ class NGX
     end
   end
 
+  #
+  # Remove an Nginx virtual host config
+  #
   def self.vhost_remove(*arguments)
     search = arguments.first.first
     config_file = self._find_vhost_config(search)
@@ -59,6 +68,9 @@ class NGX
     end
   end
 
+  #
+  # Finds a virtual host config by name
+  #
   def self._find_vhost_config(search)
     configs = Dir['/etc/nginx/conf.d/**/*.conf']
 
@@ -89,23 +101,38 @@ class NGX
     end
   end
 
+  #
+  # Open a file in vim
+  #
   def self._vim_file(file)
     system("vim #{file}")
   end
 
+  #
+  # Reload Nginx
+  #
   def self.reload(*arguments)
     system('service nginx reload')
   end
 
+  #
+  # Restart Nginx
+  #
   def self.restart(*arguments)
     system('service nginx restart')
   end
 
+  #
+  # Show Nginx status and run configtest
+  #
   def self.check(*arguments)
     system('service nginx status')
     system('service nginx configtest')
   end
 
+  #
+  # Show all commands for this tool
+  #
   def self.show_available_functions
     puts
 		puts green("Usage")
