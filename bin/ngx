@@ -93,15 +93,15 @@ class NGX
     system("vim #{file}")
   end
 
-  def self.reload
+  def self.reload(*arguments)
     system('service nginx reload')
   end
 
-  def self.restart
+  def self.restart(*arguments)
     system('service nginx restart')
   end
 
-  def self.check
+  def self.check(*arguments)
     system('service nginx status')
     system('service nginx configtest')
   end
