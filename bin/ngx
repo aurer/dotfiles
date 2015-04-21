@@ -42,7 +42,7 @@ class NGX
   # Edit an Nginx virtual host config file in vim
   #
   def self.vhost_edit(*arguments)
-    search = arguments.first.first
+    search = arguments[0]
     config_file = self._find_vhost_config(search)
 
     if config_file
@@ -56,7 +56,7 @@ class NGX
   # Remove an Nginx virtual host config
   #
   def self.vhost_remove(*arguments)
-    search = arguments.first.first
+    search = arguments[0]
     config_file = self._find_vhost_config(search)
 
     if config_file
@@ -187,7 +187,7 @@ if ARGV.length > 0
 
 	# Run command with arguments
 	# puts command, site, branch
-	NGX.send(command, arguments)
+	NGX.send(command, *arguments)
 else
 	NGX.show_available_functions
 end
