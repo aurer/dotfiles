@@ -114,32 +114,6 @@ class GK
 		puts "Created settings.php with database set to #{site}_local_#{branch}"
 	end
 
-	def self.nginx_create(site, *null)
-
-		if( !File.directory? "/etc/nginx/conf.d" )
-			puts "/etc/nginx/conf.d does not exist on this system so this command fails now."
-			exit
-		end
-
-		input_file = "/etc/nginx/vhost-example.conf"
-		output_file = "/etc/nginx/conf.d/#{site}.conf"
-		
-		# Check if we should overwrite
-		if File.exists?(output_file)
-			print "Overwrite existing file? (y/n): "
-			if STDIN.gets.chomp.downcase != 'y'
-				puts 'Aborted'
-				exit
-			end
-		end
-
-		example_content = File.read(input_file)
-		new_content = example_content.gsub(/projectcode/, site)
-
-		File.open("/etc/nginx/conf.d/#{site}.conf", 'w+') { |file| file.puts new_content }
-		puts new_content
-	end
-
 	#
 	# Show a list of valid commands
 	#
@@ -154,7 +128,6 @@ class GK
 		puts color("file-sync", 'green') + "        Download/sync files with stage site: file-sync <site> [branch_from [branch_to]]"
 		puts color("site-sync", 'green') + "        Run db-sync and file-sync: site-sync <site> [branch_from [branch_to]]"
 		puts color("create-settings", 'green') + "  Create database settings in settings.php."
-		puts color("nginx-create", 'green') + "  		Create a new nginx conf file: nginx-create <site>"
 		puts
 		puts "db-sync, file-sync and site-sync, default to the 'develop' branch if none is supplied."
 	end
