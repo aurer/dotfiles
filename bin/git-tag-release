@@ -10,7 +10,7 @@ git merge origin/master
 git merge develop --ff-only
 
 # Merge in develop
-echo "OK to push? (y/n)"
+printf "Continue and push master to remote? (y/n)"
 read push
 if [ "$push" != "y" ]; then exit 1; fi
 git push
@@ -20,7 +20,7 @@ echo
 echo "Current version: "
 git tags | sort -V | tail -1
 echo
-echo "Enter new version: "
+printf "Enter new version: "
 read version
 
 # Push and switch back to develop
