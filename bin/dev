@@ -28,7 +28,7 @@ class GK
 		# Make site
 		if make
 			Dir.chdir Dir.pwd + "/webroot"
-			system "drush make #{site}.make --working-copy && git reset --hard"
+			system "drush make #{site}.make --working-copy --force-complete && git reset --hard"
 		end
 
 	end
