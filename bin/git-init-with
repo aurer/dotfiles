@@ -1,11 +1,5 @@
 #!/usr/bin/env ruby
 
-# check if we're in a git repo
-if `git rev-parse --is-inside-work-tree &>/dev/null || exit 1`
-	puts "This folder is already managed by git"
-	# exit
-end
-
 remote = ARGV[0]
 if !remote
 	print "Repository url: "
