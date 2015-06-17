@@ -52,6 +52,9 @@ class GK
 		else
 			system "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
 		end
+
+		# Enable less dev mode and source maps
+		system "drush vset less_devel 1 && drush vset less_source_maps 1"
 	end
 
 	#
