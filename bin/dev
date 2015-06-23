@@ -33,6 +33,11 @@ class GK
 
 	end
 
+	def self.rebuild(site, *branch)
+		Dir.chdir "~/webdev/build/webdev-tools/phing/buildfiles"
+		system "phing -f #{site}-build.xml deployDevelop"
+	end
+
 	#
 	# Sync a local database to the stage site
 	#
@@ -127,6 +132,7 @@ class GK
 		puts
 		puts color("Available commands", 'yellow')
 		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it."
+		puts color("rebuild", 'green') + "          Rebuild a site using phing commands."
 		puts color("db-sync", 'green') + "          Create/sync database with stage site: db-sync <site> [branch_from [branch_to]]."
 		puts color("file-sync", 'green') + "        Download/sync files with stage site: file-sync <site> [branch_from [branch_to]]"
 		puts color("site-sync", 'green') + "        Run db-sync and file-sync: site-sync <site> [branch_from [branch_to]]"
