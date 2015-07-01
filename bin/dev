@@ -33,8 +33,11 @@ class GK
 
 	end
 
+	#
+	# Rebuild a site using phing and deployDevelop option
+	#
 	def self.rebuild(site, *branch)
-		Dir.chdir "~/webdev/build/webdev-tools/phing/buildfiles"
+		Dir.chdir "/srv/build/webdev-tools/phing/buildfiles"
 		system "phing -f #{site}-build.xml deployDevelop"
 	end
 
