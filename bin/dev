@@ -41,6 +41,11 @@ class GK
 		system "phing -f #{site}-build.xml deployDevelop"
 	end
 
+	def self.rebuild_stage(site, *branch)
+		Dir.chdir "/root/webdev-tools/phing/buildfiles"
+		system "phing -f #{site}-build.xml deployStage"
+	end
+
 	#
 	# Sync a local database to the stage site
 	#
@@ -62,7 +67,10 @@ class GK
 		end
 
 		# Enable less dev mode and source maps
-		system "drush vset less_devel 1 && drush vset less_source_maps 1"
+		system "drush vset less_devel 1"
+		system "drush vset less_source_maps 1"
+		system "drush vset preprocess_css 0"
+		system "drush vset preprocess_js 0"
 	end
 
 	#
