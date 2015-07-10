@@ -45,9 +45,18 @@ class GK
 		system "phing -f /srv/build/webdev-tools/phing/buildfiles/#{site}-build.xml deployDevelop"
 	end
 
-	def self.rebuild_stage(site, *branch)
-		Dir.chdir "/root/webdev-tools/phing/buildfiles"
-		system "phing -f #{site}-build.xml deployStage"
+	#
+	# Import a database from a stage site
+	#
+	def self.db_import(site, *branch)
+		branch_from = branch[0]
+		branch_to = branch[1] ? branch[1] : branch[0]
+		db_name = "#{site}_local_#{branch_to.gsub('-', '_')}"
+
+		system "drush @#{site}.stage.#{branch_from} sql-dump > #{site}.stage.#{branch_to}.sql &&" +
+			 "mysql -e 'create database if not exists #{db_name}' &&" +
+			 "mysql #{db_name} < #{site}.stage.#{branch_to}.sql &&" +
+			 "rm #{site}.stage.#{branch_to}.sql &&"
 	end
 
 	#
@@ -61,14 +70,11 @@ class GK
 
 		# If the database does not exist, import it from stage
 		if !db_exists
-			system "drush @#{site}.stage.#{branch_from} sql-dump > #{site}.stage.#{branch_to}.sql &&" +
-				 "mysql -e 'create database if not exists #{db_name}' &&" +
-				 "mysql #{db_name} < #{site}.stage.#{branch_to}.sql &&" +
-				 "rm #{site}.stage.#{branch_to}.sql &&" +
-				 "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
-		else
-			system "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
+			self.db_import(site, *branch)
 		end
+
+		# Run sql-sync
+		system "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
 
 		# Enable less dev mode and source maps
 		system "drush vset less_devel 1"
@@ -148,6 +154,7 @@ class GK
 		puts color("Available commands", 'yellow')
 		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it."
 		puts color("rebuild", 'green') + "          Rebuild a site using phing commands."
+		puts color("db-import", 'green') + "        Import a database from a stage site: db-import <site> [branch_from [branch_to]]."
 		puts color("db-sync", 'green') + "          Create/sync database with stage site: db-sync <site> [branch_from [branch_to]]."
 		puts color("file-sync", 'green') + "        Download/sync files with stage site: file-sync <site> [branch_from [branch_to]]"
 		puts color("site-sync", 'green') + "        Run db-sync and file-sync: site-sync <site> [branch_from [branch_to]]"
