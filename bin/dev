@@ -37,8 +37,12 @@ class GK
 	# Rebuild a site using phing and deployDevelop option
 	#
 	def self.rebuild(site, *branch)
-		Dir.chdir "/srv/build/webdev-tools/phing/buildfiles"
-		system "phing -f #{site}-build.xml deployDevelop"
+		if !Dir.exist? "/srv/build/gkdigital/#{site}/source"
+			puts "Project files not present - running getProject..."
+			system "phing -f /srv/build/webdev-tools/phing/buildfiles/#{site}-build.xml getProject"
+		end
+		puts "Running deployDevelop"
+		system "phing -f /srv/build/webdev-tools/phing/buildfiles/#{site}-build.xml deployDevelop"
 	end
 
 	def self.rebuild_stage(site, *branch)
