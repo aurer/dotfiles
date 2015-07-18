@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-class GK
+class Dev
 	#
 	# Clone and make a site
 	#
@@ -149,7 +149,7 @@ class GK
 	def self.show_available_functions
 		puts
 		puts color("Usage", 'yellow')
-		puts "gk <command> [site] [branch]"
+		puts "dev <command> [site] [branch]"
 		puts
 		puts color("Available commands", 'yellow')
 		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it."
@@ -205,7 +205,7 @@ if ARGV.length > 0
 
 	# Run command with arguments
 	# puts command, site, branch
-	GK.send(command, site, branch, other)
+	Dev.send(command, site, branch, other)
 else
-	GK.show_available_functions
+	Dev.show_available_functions
 end
