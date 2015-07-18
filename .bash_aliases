@@ -82,3 +82,4 @@ alias gsr="git_status_recursive"
 # Programs
 alias v="vim"
 alias va="vagrant"
+alias sc="systemctl"
