@@ -2,38 +2,6 @@
 
 class GK
 	#
-	# Clone and make a site
-	#
-	def self.setup_site(site, *branch)
-		branch = branch[0]
-
-		# Show a warning if we're not in /srv directory
-		if !Dir.pwd.start_with?('/srv')
-			puts "This command should be run from /srv/build or similar"
-			puts "-----------------------------------------------------"
-		end
-
-		# Run drush make?
-		print "Make the site? (y/N): "
-		make = STDIN.gets.chomp.downcase == 'y' ? true : false
-
-		# Set up git url
-		git_url = "git@bitbucket.org:greeneking/#{site}.git"
-
-		# Clone site
-		system "mkdir -p #{site}/#{branch}/logs"
-		Dir.chdir Dir.pwd + "/#{site}/#{branch}"
-		system "git clone #{git_url} webroot && cd webroot && git checkout #{branch}"
-
-		# Make site
-		if make
-			Dir.chdir Dir.pwd + "/webroot"
-			system "drush make #{site}.make --working-copy --force-complete && git reset --hard"
-		end
-
-	end
-
-	#
 	# Rebuild a site using phing and deployDevelop option
 	#
 	def self.rebuild(site, *branch)
@@ -41,8 +9,8 @@ class GK
 			puts "Project files not present - running getProject..."
 			system "phing -f /srv/build/webdev-tools/phing/buildfiles/#{site}-build.xml getProject"
 		end
-		puts "Running deployDevelop"
-		system "phing -f /srv/build/webdev-tools/phing/buildfiles/#{site}-build.xml deployDevelop"
+		puts "Running deploy.local"
+		system "phing -f /srv/build/webdev-tools/phing/buildfiles/#{site}-build.xml deploy.local"
 	end
 
 	#
@@ -101,49 +69,6 @@ class GK
 	end
 
 	#
-	# Create database settings in settings.php
-	#
-	def self.create_settings(site, *branch)
-		branch = branch[0]
-
-		# Get the settings files
-		settings_root = "/srv/build/#{site}/#{branch}/webroot/sites/default/"
-		default_settings_file = settings_root + "default.settings.php"
-		settings_file = settings_root + "settings.php"
-
-		# Setup database settings
-		db_settings = "$databases = array(\n" +
-			"	'default' => array (\n" +
-			"   	'default' => array (\n" +
-			"      'database' => '#{site}_local_#{branch.gsub('-','_')}',\n" +
-			"      'username' => 'root',\n" +
-			"      'password' => '',\n" +
-			"      'host' => 'localhost',\n" +
-			"      'port' => '',\n" +
-			"      'driver' => 'mysql',\n" +
-			"      'prefix' => '',\n" +
-			"    ),\n" +
-			"  ),\n" +
-			");"
-
-		# Check if we should overwrite
-		if File.exists?(settings_file)
-			print "Overwrite existing settings.php? (y/n): "
-			if STDIN.gets.chomp.downcase != 'y'
-				puts 'Aborted'
-				exit
-			end
-		end
-
-		# Create new settings
-		new_settings = File.read(default_settings_file).gsub(/^\$databases = array\(\);/, db_settings)
-		new_settings_file = File.open(settings_file, 'w+')
-		new_settings_file.puts(new_settings)
-		new_settings_file.close
-		puts "Created settings.php with database set to #{site}_local_#{branch}"
-	end
-
-	#
 	# Show a list of valid commands
 	#
 	def self.show_available_functions
@@ -152,13 +77,11 @@ class GK
 		puts "gk <command> [site] [branch]"
 		puts
 		puts color("Available commands", 'yellow')
-		puts color("setup-site", 'green') + "       Create site structure, checkout site and make it."
 		puts color("rebuild", 'green') + "          Rebuild a site using phing commands."
 		puts color("db-import", 'green') + "        Import a database from a stage site: db-import <site> [branch_from [branch_to]]."
 		puts color("db-sync", 'green') + "          Create/sync database with stage site: db-sync <site> [branch_from [branch_to]]."
 		puts color("file-sync", 'green') + "        Download/sync files with stage site: file-sync <site> [branch_from [branch_to]]"
 		puts color("site-sync", 'green') + "        Run db-sync and file-sync: site-sync <site> [branch_from [branch_to]]"
-		puts color("create-settings", 'green') + "  Create database settings in settings.php."
 		puts
 		puts "db-sync, file-sync and site-sync, default to the 'develop' branch if none is supplied."
 	end
