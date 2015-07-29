@@ -1,5 +1,8 @@
-
 #!/bin/bash
+
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
 
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias -- -="cd -"

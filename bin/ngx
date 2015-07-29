@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 class NGX
   #
   # Create an Nginx virtual host config from the example files

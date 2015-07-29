@@ -1,3 +1,6 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" This file is managed centrally, any manual changes might be overwritten
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Make Vim more useful
 set nocompatible
 

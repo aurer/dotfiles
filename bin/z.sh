@@ -1,5 +1,9 @@
 # Copyright (c) 2009 rupa deadwyler under the WTFPL license
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 # maintains a jump-list of the directories you actually use
 #
 # INSTALL:

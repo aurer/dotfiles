@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 class Dev
 	#
 	# Rebuild a site using phing and deployDevelop option

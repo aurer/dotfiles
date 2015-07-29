@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 

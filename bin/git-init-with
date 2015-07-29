@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 remote = ARGV[0]
 if !remote
 	print "Repository url: "

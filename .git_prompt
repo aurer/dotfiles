@@ -1,3 +1,7 @@
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+#
 # bash/zsh git prompt support
 #
 # Copyright (C) 2006,2007 Shawn O. Pearce <spearce@spearce.org>

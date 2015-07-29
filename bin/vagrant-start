@@ -1,4 +1,8 @@
 #!/bin/bash
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 # Start vagrant and ssh straight in!
 vagrant up --no-provision && vagrant ssh

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#########################################################################
+# This file is managed centrally, any manual changes might be overwritten
+#########################################################################
+
 # Simple calculator
 function calc() {
 	local result=""
