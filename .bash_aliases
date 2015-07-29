@@ -1,3 +1,6 @@
+
+#!/bin/bash
+
 # Easier navigation: .., ..., ...., ....., ~ and -
 alias -- -="cd -"
 alias ..="cd .."
@@ -65,7 +68,7 @@ alias ping='ping -c 5 -t 3'
 
 # Be nice
 alias please="sudo"
-alias hosts="sudo $EDITOR /etc/hosts"
+alias hosts="sudo vim /etc/hosts"
 
 # Git shortcuts
 alias g="git"
