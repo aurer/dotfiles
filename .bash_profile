@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Add `~/bin` to the `$PATH`
 export PATH="$HOME/bin:/usr/local/bin:$PATH"
 
