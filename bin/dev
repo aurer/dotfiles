@@ -25,10 +25,10 @@ class Dev
 		branch_to = branch[1] ? branch[1] : branch[0]
 		db_name = "#{site}_local_#{branch_to.gsub('-', '_')}"
 
-		system "drush @#{site}.stage.#{branch_from} sql-dump > #{site}.stage.#{branch_to}.sql &&" +
-			 "mysql -e 'create database if not exists #{db_name}' &&" +
-			 "mysql #{db_name} < #{site}.stage.#{branch_to}.sql &&" +
-			 "rm #{site}.stage.#{branch_to}.sql &&"
+		system "drush @#{site}.stage.#{branch_from} sql-dump > #{site}.stage.#{branch_to}.sql"
+		system "mysql -e 'create database if not exists #{db_name}'"
+		system "mysql #{db_name} < #{site}.stage.#{branch_to}.sql"
+		system "rm #{site}.stage.#{branch_to}.sql"
 	end
 
 	#
@@ -111,8 +111,9 @@ def color(string, color)
 	"#{c[color]}#{string}\e[1;0m"
 end
 
-
+#
 # Run commands
+#
 if ARGV.length > 0
 	# First argument is the command to run
 	command = ARGV[0].gsub('-', '_')
