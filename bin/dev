@@ -49,10 +49,10 @@ class Dev
 		system "drush sql-sync @#{site}.stage.#{branch_from} @#{site}.local.#{branch_to} -y --create-db"
 
 		# Enable less dev mode and source maps
-		system "drush vset less_devel 1"
-		system "drush vset less_source_maps 1"
-		system "drush vset preprocess_css 0"
-		system "drush vset preprocess_js 0"
+		system "drush vset less_devel 1 --root=/srv/build/#{site}/#{branch_to}/webdev"
+		system "drush vset less_source_maps 1 --root=/srv/build/#{site}/#{branch_to}/webdev"
+		system "drush vset preprocess_css 0 --root=/srv/build/#{site}/#{branch_to}/webdev"
+		system "drush vset preprocess_js 0 --root=/srv/build/#{site}/#{branch_to}/webdev"
 	end
 
 	#
