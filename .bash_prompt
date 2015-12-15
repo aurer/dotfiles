@@ -150,4 +150,4 @@ else
 fi
 
 # Nicely formatted terminal prompt
-export PS1='\n\[$blue\]\h:\[$cyan\]\w  $(git_info) \n\[$usercolor\]\u:\[$reset\] '
+export PS1='\n\[$usercolor\]\u \[$reset\]@ \[$orange\]\h \[$reset\]: \[$cyan\]\w  $(git_info) \[$reset\]\n❯ '
