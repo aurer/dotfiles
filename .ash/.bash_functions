@@ -4,32 +4,9 @@
 # This file is managed centrally, any manual changes might be overwritten
 #########################################################################
 
-# Simple calculator
-function calc() {
-	local result=""
-	result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
-	#                       └─ default (when `--mathlib` is used) is 20
-	#
-	if [[ "$result" == *.* ]]; then
-		# improve the output for decimal numbers
-		printf "$result" |
-		sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
-		    -e 's/^-\./-0./'      `# add "0" for cases like "-.5"`\
-		    -e 's/0*$//;s/\.$//'   # remove trailing zeros
-	else
-		printf "$result"
-	fi
-	printf "\n"
-}
-
 # Create a new directory and enter it
 function mkd() {
 	mkdir -p "$@" && cd "$@"
-}
-
-# Change working directory to the top-most Finder window location
-function cdf() { # short for `cdfinder`
-	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')"
 }
 
 # Determine size of a file or total size of a directory
@@ -46,14 +23,6 @@ function fs() {
 	fi
 }
 
-# Use Git’s colored diff when available
-hash git &>/dev/null
-if [ $? -eq 0 ]; then
-	function diff() {
-		git diff --no-index --color-words "$@"
-	}
-fi
-
 # Start an HTTP server from a directory, optionally specifying the port
 function server() {
 	local port="${1:-8000}"
@@ -69,29 +38,6 @@ function phpserver() {
 	local port="${1:-4000}"
 	local ip="10.100.70.102"
 	sleep 1 && open "http://localhost:${port}/" &&  php -S "localhost:${port}";
-}
-
-# All the dig info
-function digga() {
-	dig +nocmd "$1" any +multiline +noall +answer
-}
-
-# `v` with no arguments opens the current directory in Vim, otherwise opens the
-# given location
-function v() {
-	if [ $# -eq 0 ]; then
-		vim .
-	else
-		vim "$@"
-	fi
-}
-
-# `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
-# the `.git` directory, listing directories first. The output gets piped into
-# `less` with options to preserve color and line numbers, unless the output is
-# small enough for one screen.
-function tre() {
-	tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX
 }
 
 # Run git status -s on any git repository within the current directory
