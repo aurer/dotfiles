@@ -17,3 +17,5 @@ done;
 
 unset file
 unset DIR
+
+source ~/.bash_profile
