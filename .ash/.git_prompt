@@ -6,8 +6,6 @@
 
 # Return git status in prompt form
 function _git_status() {
-	# Don't split on whitespace characters
-	ORIGINAL_IFS="${IFS}"; IFS=$'\n';
 
 	# Unstaged counts
 	local M2=0;
@@ -31,8 +29,11 @@ function _git_status() {
   local staged='';
 	local result='';
 
+	# Don't split on whitespace characters
+	ORIGINAL_IFS="${IFS}"; IFS=$'\n';
+
 	# Loop git status
-	for line in $(git status -s 2>/dev/null); do
+	for line in $(git status -s --porcelain 2>/dev/null); do
     # Count staged items
     case ${line:0:1} in
       'M') ((M1+=1));;
@@ -54,6 +55,9 @@ function _git_status() {
 			'!') ((I2+=1));;
 		esac;
 	done;
+
+	# Reset split on whitespace
+	IFS="${ORIGINAL_IFS}"
 
 	for state in {M2,A2,D2,R2,C2,U2,I2,M1,A1,D1,R1,C1}; do
 		if [ "${!state}" != "0" ]; then
@@ -77,9 +81,6 @@ function _git_status() {
 			esac;
 		fi
 	done
-
-  # Reset split on whitespace
-	ORIGINAL_IFS="${OIFS}"
 
 	# Trim whitespace
 	unstaged=$(echo $unstaged | sed -e "s/^ *//");
