@@ -1,13 +1,12 @@
 #!/bin/bash
 
-# Execute as root
-#(( EUID != 0 )) && exec sudo -- "$0" "$@"
-
 # Set the base directory
-dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd )
+dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
-for file in .{ash,bash_profile,bashrc,gitconfig,gitignore,vim,vimrc,wgetrc} ; do
+# Make sure we're up to date
+git pull;
 
+for file in .{ash,bash_profile,bashrc,inputrc,gitconfig,gitignore,vim,vimrc,wgetrc} bin ; do
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
@@ -38,10 +37,11 @@ if [[ ! $(git config user.email) ]]; then
 	read email;
 fi
 
+# Write custom git config
 cat > ~/.gitconfig.local <<EOL
 [user]
 	name = $username
 	email = $email
 EOL
 
-source ~/.bash_profile
+source ~/.bash_profile;

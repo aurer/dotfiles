@@ -1,0 +1,87 @@
+#!/usr/bin/env php
+<?php
+
+/*******************************************************************************
+ * This file is managed centrally, any manual changes might be overwritten
+ ******************************************************************************/
+
+class Ash {
+	/*
+	 * Update the dotfiles
+	 */
+	public function update() {
+		$root = __DIR__ . "/..";
+		$branch = exec("cd $root && git rev-parse --abbrev-ref HEAD");
+		system("cd $root && sh bootstrap.sh");
+	}
+
+	/*
+	 * Show a list of valid commands
+	 */
+	public function show_available_functions() {
+		echo color("Usage", 'grey') . "\n";
+		echo "ash <command>" . "\n\n";
+		echo color("update", 'green') . "              Update the dotfiles repository.\n";
+	}
+
+	/*
+	 * If an invalid command is passed, show valid commands
+	 */
+	private function method_missing() {
+		echo "Command not found";
+		show_available_functions();
+	}
+}
+
+/*
+ * Colorise output to terminal
+ */
+function color($string, $color) {
+	$c = array(
+		'red' 		=> system("tput setaf 160"),
+		'yellow' 	=> system("tput setaf 214"),
+		'green' 	=> system("tput setaf 113"),
+		'grey'    => system("tput setaf 240"),
+	);
+	return "{$c[$color]}{$string}" . system("tput sgr0");
+}
+
+/*
+ * Run commands
+ */
+$webdev =  new Ash;
+if (count($argv) > 1) {
+	// First argument is the command to run
+	array_shift($argv);
+	$command = str_replace('-', '_', $argv[0]);
+
+	// Get arguments required by the given command
+	$r = new ReflectionMethod('Ash', $command);
+	$required_arguments = array_filter($r->getParameters(), function($arg){
+		return !$arg->isOptional();
+	});
+
+	// If not enough arguments are passed, ask for them
+	if (count($argv) < count($required_arguments) + 1) {
+		$passed_arguments = array();
+		echo "Please provide the following details: \n";
+		foreach ($required_arguments as $arg) {
+			$passed_arguments[] = readline(ucfirst($arg->name) . ': ');
+		}
+	} else {
+		$passed_arguments = array_slice($argv, 1);
+	}
+
+	// Run the given command pasing in supplied arguments
+	switch ($required_arguments) {
+	 	case 0:
+	 		call_user_method($command, $webdev);
+	 	break;
+
+	 	default:
+	 		call_user_func_array(array($webdev, $command), $passed_arguments);
+	 	break;
+	}
+} else {
+	$webdev->show_available_functions();
+}
