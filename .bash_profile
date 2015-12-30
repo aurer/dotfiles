@@ -7,10 +7,16 @@
 # Add `~/bin` and composer bin to the `$PATH`
 export PATH="$PATH:$HOME/bin:/usr/local/bin:~/.composer/vendor/bin"
 
-# Load the shell dotfiles, and then some:
+# Load the shell dotfiles
+for file in ~/.ash/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
+	[ -r "$file" ] && [ -f "$file" ] && source "$file"
+done
+unset file
+
+# Load overide shell dotfiles
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.ash/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
+for file in ~/.{path,extra}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
