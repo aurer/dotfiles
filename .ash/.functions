@@ -41,21 +41,19 @@ function phpserver() {
 }
 
 # Run git status -s on any git repository within the current directory
-function git_status_recursive() {
+function git_subrepo_status() {
+	CURRENT_DIR=$(pwd);
 	REPOS=($(find ./ -name .git | cut -c3-))
 	REPO_COUNT=${#REPOS[@]}
-	reset=$(tput sgr0);
-	green=$(tput setaf 113);
-	red=$(tput setaf 160);
 	if [ $REPO_COUNT = 0 ]; then
 		echo "${red}No repositories were found${reset}"
 	else
 		echo "${green}$REPO_COUNT repos found...${reset}"
-		for i in ${REPOS[@]}; do
-			cd "$i/.."
-			echo
-			tput setaf 172 && pwd && tput sgr0 && git status -s
-			cd - > /dev/null
+		for repo in ${REPOS[@]}; do
+			cd ".$repo/..";
+			echo;
+			pwd && git_prompt;
+			cd $CURRENT_DIR;
 		done
 	fi
 }
