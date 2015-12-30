@@ -7,11 +7,19 @@
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd )
 
 for file in .{ash,bash_profile,bashrc,gitconfig,gitignore,vim,vimrc,wgetrc} ; do
+
+	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
 		echo "Moved ~/$file to ~/$file.orig"
 	fi;
 
+	# Remove existing symlinks
+	if [ -L ~/$file ]; then
+		rm -rf ~/$file;
+	fi;
+
+	# Create the symlink
 	ln -sf $dir/$file ~/$file;
 done;
 
