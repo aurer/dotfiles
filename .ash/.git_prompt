@@ -134,5 +134,5 @@ function git_prompt() {
       result+="$orange ⚑$stashes";
     fi
 
-    echo $result$(_git_position)$reset;
+    echo $result $(_git_position)$reset;
 }
