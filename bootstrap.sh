@@ -35,3 +35,5 @@ cat > ~/.gitconfig.local <<EOL
 	name = $username
 	email = $email
 EOL
+
+source ~/.bash_profile
