@@ -23,12 +23,12 @@
 [core]
 	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
-	# insanely beautiful diffs
-	pager = diff-highlight | diff-so-fancy | less -r
+
 [color "branch"]
 	current = yellow reverse
 	local = yellow
 	remote = green
+
 [color "diff"]
 	meta = yellow bold
 	commit = green bold
@@ -36,19 +36,11 @@
 	old = red bold
 	new = green bold
 	whitespace = red reverse
+
 [color "status"]
 	added = yellow
 	changed = green
 	untracked = cyan
-[merge]
-	tool = opendiff
-
-
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = "red bold 52"
-	newNormal = "green bold"
-	newHighlight = "green bold 22"
 
 # rewrites
 [url "git@github.com:"]
@@ -57,6 +49,7 @@
 	pushInsteadOf = "github:"
 	pushInsteadOf = "git://github.com/"
     pushInsteadOf = "https://github.com/"
+
 [url "git@gist.github.com:"]
 	insteadOf = "gst:"
 	pushInsteadOf = "gist:"
@@ -70,13 +63,11 @@
 [push]
 	default = current
 
-# For username / github token / etc
-[include]
-  path = ~/.gitconfig.local
-
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
-[init]
-	templatedir = ~/.git_template
+
+# For username / github token / etc
+[include]
+  path = ~/.gitconfig.local
