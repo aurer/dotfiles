@@ -38,10 +38,6 @@ if [[ ! $(git config user.email) ]]; then
 fi
 
 # Write custom git config
-cat > ~/.gitconfig.local <<EOL
-[user]
-	name = $username
-	email = $email
-EOL
+printf "[user]\n  name = $username\n  email = $email\n" >> ~/.gitconfig.local;
 
 source ~/.bash_profile;
