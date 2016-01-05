@@ -4,7 +4,9 @@
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
 # Make sure we're up to date
-git pull;
+branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||');
+git pull origin $branch;
+unset branch;
 
 for file in .{ash,bash_profile,bashrc,inputrc,gitconfig,gitignore,vim,vimrc,wgetrc} bin ; do
 	# Backup existing files
