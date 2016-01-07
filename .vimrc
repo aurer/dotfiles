@@ -50,7 +50,7 @@ syntax on
 set cursorline
 
 " Make tabs as wide as two spaces
-set tabstop=2
+set tabstop=2 softtabstop=0 shiftwidth=2 smarttab
 
 " Highlight searches
 set hlsearch
@@ -63,9 +63,6 @@ set incsearch
 
 " Always show status line
 set laststatus=2
-
-" Enable mouse in all modes
-set mouse=a
 
 " Disable error bells
 set noerrorbells
