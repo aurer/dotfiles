@@ -2,7 +2,7 @@
 if ARGV.length > 0
 	branch_to = ARGV[0]
 	branch_from = `git rev-parse --abbrev-ref HEAD`
-	available_branches = `git branch`
+	available_branches = `git branch --color=never`
 
 	if branch_from == ''
 		puts "Can't merge: you are not currently on a branch"
@@ -24,6 +24,7 @@ if ARGV.length > 0
 
 	system "git checkout #{branch_to}"
 	system "git merge #{branch_from}"
+	system "git checkout #{branch_from}"
 else
 	puts "Please specify a branch to merge into e.g. 'git merge-to develop'"
 end
