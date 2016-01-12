@@ -68,6 +68,9 @@
 	smudge = git-lfs smudge %f
 	required = true
 
+[init]
+	templatedir = ~/.git_template
+
 # For username / github token / etc
 [include]
   path = ~/.gitconfig.local
