@@ -7,7 +7,7 @@
 if tput setaf 1 &> /dev/null; then
   reset=$(tput sgr0);
   bold=$(tput bold);
-  pink=$(tput setaf 198);
+  pink=$(tput setaf 163);
   violet=$(tput setaf 103);
   blue=$(tput setaf 38);
   cyan=$(tput setaf 72);
