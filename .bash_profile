@@ -4,8 +4,17 @@
 # This file is managed centrally, any manual changes might be overwritten
 #########################################################################
 
-# Add `~/bin` and composer bin to the `$PATH`
-export PATH="$PATH:$HOME/bin:/usr/local/bin:~/.composer/vendor/bin"
+# Add useful items to the `$PATH`
+for dir in {$HOME/bin,/usr/local/bin,/usr/local/sbin,~/.composer/vendor/bin}; do
+	PATH="$PATH;$dir";
+done
+export PATH="$PATH"
+unset dir
+
+for path in {$HOME/bin,/usr/local/bin,/usr/local/sbin,~/.composer/vendor/bin}; do
+	echo $path;
+done
+unset path
 
 # Load the shell dotfiles
 for file in ~/.ash/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
