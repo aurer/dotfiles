@@ -11,11 +11,6 @@ done
 export PATH="$PATH"
 unset dir
 
-for path in {$HOME/bin,/usr/local/bin,/usr/local/sbin,~/.composer/vendor/bin}; do
-	echo $path;
-done
-unset path
-
 # Load the shell dotfiles
 for file in ~/.ash/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
