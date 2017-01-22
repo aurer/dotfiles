@@ -5,8 +5,8 @@
 #########################################################################
 
 # Add useful items to the `$PATH`
-for dir in {$HOME/bin,/usr/local/bin,/usr/local/sbin,~/.composer/vendor/bin}; do
-	PATH="$PATH;$dir";
+for dir in {$HOME/bin,/usr/local/bin,/usr/local/sbin}; do
+	PATH="$PATH:$dir";
 done
 export PATH="$PATH"
 unset dir
