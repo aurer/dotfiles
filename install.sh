@@ -45,6 +45,6 @@ fi
 # Write custom git config
 printf "\n[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
 
-cd ~ && source ~/.bash_profile;
+. ~/.bash_profile;
 
 printf "\n----\nDone\n"

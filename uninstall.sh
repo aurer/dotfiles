@@ -26,6 +26,4 @@ if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
 	sed -i -e '/  path = \.dotfiles\/\.gitconfig/g' ~/.gitconfig
 fi
 
-cd ~ && source ~/.bash_profile;
-
 printf "\n----\nDone\n"
