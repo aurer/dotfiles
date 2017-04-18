@@ -5,14 +5,14 @@
 #########################################################################
 
 # Add useful items to the `$PATH`
-for dir in {$HOME/bin,/usr/local/bin,/usr/local/sbin}; do
+for dir in {$HOME/bin,$HOME/.dotfiles/bin,/usr/local/bin,/usr/local/sbin}; do
 	PATH="$PATH:$dir";
 done
 export PATH="$PATH"
 unset dir
 
 # Load the shell dotfiles
-for file in ~/.ash/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
+for file in ~/.dotfiles/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
