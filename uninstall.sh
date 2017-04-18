@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "\n------------\nUninstalling\n------------\n\n"
+printf "------------\nUninstalling\n------------\n\n"
 
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
@@ -23,9 +23,9 @@ unset dir
 
 # Remove include frpm gitconfig
 if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
-	sed -ie '/  path = \.dotfiles\/\.gitconfig/g' ~/.gitconfig
+	sed -i -e '/  path = \.dotfiles\/\.gitconfig/g' ~/.gitconfig
 fi
 
-source ~/.bash_profile;
+cd && source .bash_profile;
 
 printf "\n----\nDone\n----\n"
