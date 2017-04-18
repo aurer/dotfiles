@@ -30,17 +30,17 @@ fi
 
 # Check for git user.name
 if [[ ! $(git config user.name) ]]; then
-	printf "Git user.name: ";
+	echo "Git user.name: ";
 	read username;
 fi
 
 # Check for git user.email
 if [[ ! $(git config user.email) ]]; then
-	printf "Git user.email: ";
+	echo "Git user.email: ";
 	read email;
 fi
 
 # Write custom git config
-printf "[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
+printf "\n[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
 
 source ~/.bash_profile;
