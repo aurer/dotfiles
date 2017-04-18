@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "\n-----\nUninstalling\n-----\n"
+printf "\n------------\nUninstalling\n------------\n\n"
 
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
@@ -28,4 +28,4 @@ fi
 
 source ~/.bash_profile;
 
-printf "\n-----\nDone\n-----\n"
+printf "\n----\nDone\n----\n"

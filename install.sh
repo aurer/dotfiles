@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "\n-----\nInstalling\n-----\n"
+printf "\n----------\nInstalling\n----------\n\n"
 
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
@@ -47,4 +47,4 @@ printf "\n[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
 
 source ~/.bash_profile;
 
-printf "\n-----\nDone\n-----\n"
+printf "\n----\nDone\n----\n"
