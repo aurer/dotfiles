@@ -3,12 +3,8 @@
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
-# Make sure we're up to date
-branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||');
-git pull origin $branch;
-unset branch;
-
-for file in .{ash,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc} bin ; do
+# Install files
+for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
@@ -23,13 +19,12 @@ for file in .{ash,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc} bin ; 
 	# Create the symlink
 	ln -sf $dir/$file ~/$file;
 done;
-
 unset file
 unset dir
 
 # Add include for gitconfig
 if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
-	echo "\n[include]\n\tpath = .dotfiles/.gitconfig\n" >> ~/.gitconfig
+	echo "\n[include]\n  path = .dotfiles/.gitconfig\n" >> ~/.gitconfig
 fi
 
 # Check for git user.name
@@ -45,6 +40,6 @@ if [[ ! $(git config user.email) ]]; then
 fi
 
 # Write custom git config
-printf "[user]\n  name = $username\n  email = $email\n" >> ~/.gitconfig;
+printf "[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
 
 source ~/.bash_profile;
