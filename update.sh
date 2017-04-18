@@ -10,7 +10,7 @@ branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||');
 git pull origin $branch;
 unset branch;
 
-for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc} bin ; do
+for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
