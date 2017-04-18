@@ -1,5 +1,7 @@
 #!/bin/bash
 
+printf "\n-----\Updating\n-----\n"
+
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
@@ -28,3 +30,5 @@ unset file
 unset dir
 
 source ~/.bash_profile;
+
+printf "\n-----\nDone\n-----\n"

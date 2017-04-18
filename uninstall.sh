@@ -1,5 +1,7 @@
 #!/bin/bash
 
+printf "\n-----\nUninstalling\n-----\n"
+
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
@@ -25,3 +27,5 @@ if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
 fi
 
 source ~/.bash_profile;
+
+printf "\n-----\nDone\n-----\n"

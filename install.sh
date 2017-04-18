@@ -1,5 +1,7 @@
 #!/bin/bash
 
+printf "\n-----\nInstalling\n-----\n"
+
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
@@ -8,7 +10,7 @@ for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; 
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
-		printf "Moved ~/$file to ~/$file.orig"
+		echo "Moved ~/$file to ~/$file.orig"
 	fi;
 
 	# Remove existing symlinks
@@ -30,13 +32,13 @@ fi
 
 # Check for git user.name
 if [[ ! $(git config user.name) ]]; then
-	echo "Git user.name: ";
+	printf "Git user.name: ";
 	read username;
 fi
 
 # Check for git user.email
 if [[ ! $(git config user.email) ]]; then
-	echo "Git user.email: ";
+	printf "Git user.email: ";
 	read email;
 fi
 
@@ -44,3 +46,5 @@ fi
 printf "\n[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
 
 source ~/.bash_profile;
+
+printf "\n-----\nDone\n-----\n"
