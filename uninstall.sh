@@ -21,7 +21,7 @@ unset dir
 
 # Remove include frpm gitconfig
 if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
-	sed -ie '/  path = \.dotfiles\/\.gitconfig/g' testfile.txt
+	sed -ie '/  path = \.dotfiles\/\.gitconfig/g' ~/.gitconfig
 fi
 
 source ~/.bash_profile;

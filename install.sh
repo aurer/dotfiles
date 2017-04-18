@@ -23,6 +23,7 @@ unset file
 unset dir
 
 # Add include for gitconfig
+touch ~/.gitconfig
 if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
 	echo "\n[include]\n  path = .dotfiles/.gitconfig\n" >> ~/.gitconfig
 fi
