@@ -8,7 +8,7 @@ for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; 
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
-		echo "Moved ~/$file to ~/$file.orig"
+		printf "Moved ~/$file to ~/$file.orig"
 	fi;
 
 	# Remove existing symlinks
@@ -25,7 +25,7 @@ unset dir
 # Add include for gitconfig
 touch ~/.gitconfig
 if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
-	echo "\n[include]\n  path = .dotfiles/.gitconfig\n" >> ~/.gitconfig
+	printf "\n[include]\n  path = .dotfiles/.gitconfig\n" >> ~/.gitconfig
 fi
 
 # Check for git user.name

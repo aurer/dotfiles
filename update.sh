@@ -12,7 +12,7 @@ for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc} b
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
-		echo "Moved ~/$file to ~/$file.orig"
+		printf "Moved ~/$file to ~/$file.orig"
 	fi;
 
 	# Remove existing symlinks
