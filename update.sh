@@ -29,6 +29,6 @@ done;
 unset file
 unset dir
 
-cd && source .bash_profile;
+cd ~ && source ~/.bash_profile;
 
 printf "\n----\nDone\n----\n"
