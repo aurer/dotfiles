@@ -5,22 +5,14 @@
 #########################################################################
 
 # Add useful items to the `$PATH`
-for dir in {$HOME/bin,/usr/local/bin,/usr/local/sbin}; do
+for dir in {$HOME/bin,$HOME/.dotfiles/bin,/usr/local/bin,/usr/local/sbin}; do
 	PATH="$PATH:$dir";
 done
 export PATH="$PATH"
 unset dir
 
 # Load the shell dotfiles
-for file in ~/.ash/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
-	[ -r "$file" ] && [ -f "$file" ] && source "$file"
-done
-unset file
-
-# Load overide shell dotfiles
-# * ~/.path can be used to extend `$PATH`.
-# * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,extra,ash/z}; do
+for file in ~/.dotfiles/.{colors,git_prompt,bash_prompt,bash_aliases,functions}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file

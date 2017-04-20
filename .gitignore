@@ -9,7 +9,7 @@
 .vim/.netrwhist
 
 # git credential file
-.gitconfig.local
+.gitconfig
 
 # Folder view configuration files
 .DS_Store
