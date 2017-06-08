@@ -24,7 +24,7 @@ git push
 # Show current version and set new version
 echo
 echo "Current version: "
-git tags | sort -V | tail -1
+git tag | sort -n | tail -1
 echo
 printf "Enter new version: "
 read version
