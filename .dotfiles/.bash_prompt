@@ -14,8 +14,8 @@
 if [ $EUID == "0" ]; then
   usercolor=$red;
 else
-  usercolor=$yellow;
+  usercolor=$blue;
 fi
 
 # Nicely formatted terminal prompt
-export PS1='\n\e[1m\[$usercolor\]\u\[$white\]@\[$cyan\]\h  \e[21m\[$grey\]$PWD  $(git_prompt) \n\[$usercolor\]❯ \[$reset\]';
+export PS1='\n\e[1m\[$usercolor\]\u\[$white\]:\[$blue\]\h \e[21m\[$grey\]\w  $(git_prompt) \n\[$usercolor\]> \[$reset\]';

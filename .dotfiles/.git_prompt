@@ -88,7 +88,7 @@ function _git_status() {
 
   # Compile result
   if [[ $unstaged != "" ]]; then
-    result+=$reset"[$unstaged]";
+    result+=$reset" $unstaged";
   fi
   if [[ $staged != "" ]]; then
     result=$green[$staged$green]$result;
@@ -126,7 +126,7 @@ function git_prompt() {
     if [ "$status" == "" ]; then
       result=$green"$branch"
     else
-      result="$yellow$branch $status";
+      result="$green$branch $status";
     fi
 
     # Check for stashes
