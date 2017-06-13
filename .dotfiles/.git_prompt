@@ -91,7 +91,7 @@ function _git_status() {
     result+=$reset" $unstaged";
   fi
   if [[ $staged != "" ]]; then
-    result=$green[$staged$green]$result;
+    result="$green [$staged$green]$result";
   fi
 
 	# Return output
@@ -116,9 +116,9 @@ function git_prompt() {
 
     # Add tag info if available
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
-    local tag=$(git describe 2>/dev/null)
-    if [ "$tag" != "" ]; then
-      branch="$branch$orange#$tag"
+    local tag=$(git describe --exact-match --tags 2>/dev/null)
+    if [ "$tag" != "" ] && [ "$branch" == "" ]; then
+      branch="$green#$tag"
     fi
 
     # Color based on number of changes
@@ -126,7 +126,7 @@ function git_prompt() {
     if [ "$status" == "" ]; then
       result=$green"$branch"
     else
-      result="$green$branch $status";
+      result="$green$branch$status";
     fi
 
     # Check for stashes
