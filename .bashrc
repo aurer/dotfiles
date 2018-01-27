@@ -11,3 +11,8 @@ export TERM=xterm-256color
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
+
+# Source yarn global modules
+if [[ -d $HOME/.yarn ]]; then
+ export PATH="$HOME/.yarn/bin:$PATH"
+fi
