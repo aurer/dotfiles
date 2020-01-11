@@ -1,12 +1,7 @@
-#!/bin/bash
-
-#########################################################################
-# This file is managed centrally, any manual changes might be overwritten
-#########################################################################
+#!/bin/zsh
 
 # Return git status in prompt form
 function _git_status() {
-
 	# Unstaged counts
 	local M2=0;
   local A2=0;
@@ -24,14 +19,10 @@ function _git_status() {
   local C1=0;
   local U1=0;
 
-	# Output
-	local unstaged='';
-  local staged='';
-	local result='';
-
-	# Don't split on whitespace characters
-	ORIGINAL_IFS="${IFS}"; IFS=$'\n';
-
+	# # Don't split on whitespace characters
+	ORIGINAL_IFS="${IFS}";
+	IFS=$'\n';
+	
 	# Loop git status
 	for line in $(git status -s --porcelain 2>/dev/null); do
     # Count staged items
@@ -59,25 +50,30 @@ function _git_status() {
 	# Reset split on whitespace
 	IFS="${ORIGINAL_IFS}"
 
+	# Output
+	local unstaged='';
+  local staged='';
+	local result='';
+
 	for state in {M2,A2,D2,R2,C2,U2,I2,M1,A1,D1,R1,C1}; do
-		if [ "${!state}" != "0" ]; then
+		if [[ "$(($state))" != "0" ]]; then
 			case "$state" in
         # Staged
-        M1) staged+=" ${yellow}*${!state}$reset";;
-        A1) staged+=" ${green}+${!state}$reset";;
-        D1) staged+=" ${red}-${!state}$reset";;
-        R1) staged+=" ${blue}~${!state}$reset";;
-        C1) staged+=" ${blue}C${!state}$reset";;
-        U1) staged+=" ${blue}C${!state}$reset";;
+        M1) staged+=" ${yellow}*$(($state))$reset";;
+        A1) staged+=" ${green}+$(($state))$reset";;
+        D1) staged+=" ${red}-$(($state))$reset";;
+        R1) staged+=" ${blue}~$(($state))$reset";;
+        C1) staged+=" ${blue}C$(($state))$reset";;
+        U1) staged+=" ${blue}C$(($state))$reset";;
 
         # Unstaged items
-				M2) unstaged+=" ${yellow}*${!state}$reset";;
-				A2) unstaged+=" ${green}+${!state}$reset";;
-				D2) unstaged+=" ${red}-${!state}$reset";;
-				R2) unstaged+=" ${blue}~${!state}$reset";;
-				C2) unstaged+=" ${blue}C${!state}$reset";;
-				U2) unstaged+=" ${blue}?${!state}$reset";;
-				I2) unstaged+=" ${blue}?${!state}$reset";;
+				M2) unstaged+=" ${yellow}*$(($state))$reset";;
+				A2) unstaged+=" ${green}+$(($state))$reset";;
+				D2) unstaged+=" ${red}-$(($state))$reset";;
+				R2) unstaged+=" ${blue}~$(($state))$reset";;
+				C2) unstaged+=" ${blue}C$(($state))$reset";;
+				U2) unstaged+=" ${blue}?$(($state))$reset";;
+				I2) unstaged+=" ${blue}?$(($state))$reset";;
 			esac;
 		fi
 	done
@@ -87,11 +83,11 @@ function _git_status() {
 	staged=$(echo $staged | sed -e "s/^ *//");
 
   # Compile result
-  if [[ $unstaged != "" ]]; then
-    result+=$reset" $unstaged";
+  if [[ -n "$unstaged" ]]; then
+		result+=$cyan"$unstaged$reset";
   fi
-  if [[ $staged != "" ]]; then
-    result="$green [$staged$green]$result";
+  if [[ -n "$staged" ]]; then
+		result="[$staged] $result$reset";
   fi
 
 	# Return output
@@ -116,23 +112,23 @@ function git_prompt() {
 
     # Add tag info if available
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
-    local tag=$(git describe --exact-match --tags 2>/dev/null)
-    if [ "$tag" != "" ] && [ "$branch" == "" ]; then
-      branch="$green#$tag"
+    local tag=$(git describe 2>/dev/null)
+    if [[ -n "$tag" ]]; then
+      branch="$branch$orange#$tag$reset"
     fi
 
     # Color based on number of changes
-    local status=$(_git_status);
-    if [ "$status" == "" ]; then
-      result=$green"$branch"
+    local state=$(_git_status);
+    if [[ -z "$state" ]]; then
+      result=$green"$branch"$reset
     else
-      result="$green$branch$status";
+      result="$orange$branch$reset $state";
     fi
 
     # Check for stashes
     local stashes=$(git stash list | wc -l | tr -d ' ')
-    if [ $stashes != "0" ]; then
-      result+="$orange ⚑$stashes";
+    if [[ "$stashes" != "0" ]]; then
+      result+="$orange ⚑$stashes$reset";
     fi
 
     echo $result $(_git_position)$reset;

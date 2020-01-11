@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 printf "\nUninstalling\n------------\n\n"
 
@@ -6,7 +6,7 @@ printf "\nUninstalling\n------------\n\n"
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
 # Install files
-for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
+for file in .{zshrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
 	# Remove existing symlinks
 	if [ -L ~/$file ]; then
 		rm -rf ~/$file;

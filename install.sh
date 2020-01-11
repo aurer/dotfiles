@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 printf "\nInstalling\n----------\n\n"
 
@@ -6,7 +6,7 @@ printf "\nInstalling\n----------\n\n"
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
 # Install files
-for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
+for file in .{zshrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
 	# Backup existing files
 	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 		mv ~/$file ~/$file.orig;
@@ -22,29 +22,24 @@ for file in .{dotfiles,bash_profile,bashrc,inputrc,gitignore,vim,vimrc,wgetrc}; 
 	ln -sf $dir/$file ~/$file;
 done;
 unset file
-unset dir
 
 # Add include for gitconfig
 touch ~/.gitconfig
-if ! grep -Fq "path = ~/.dotfiles/.gitconfig" ~/.gitconfig; then
-	printf "\n[include]\n  path = .dotfiles/.gitconfig\n" >> ~/.gitconfig
+if ! grep -Fq "$dir/.zsh" ~/.gitconfig; then
+	printf "\n\n[include]\n  path = $dir/.zsh/.gitconfig\n\n" >> ~/.gitconfig
 fi
 
 # Check for git user.name
 if [[ ! $(git config user.name) ]]; then
-	printf "Git user.name: ";
-	read username;
+	read -p "Git user.name: " username;
+	git config --global user.name "$username";
 fi
 
 # Check for git user.email
 if [[ ! $(git config user.email) ]]; then
-	printf "Git user.email: ";
-	read email;
+	read -p "Git user.email: " email;
+	git config --global user.email "$email";
 fi
 
-# Write custom git config
-printf "\n[user]\n\tname = $username\n\temail = $email\n" >> ~/.gitconfig;
-
-. ~/.bash_profile;
-
-printf "\n----\nDone\n"
+printf "\n----\nDone, type 'reload' to reload configuration\n"
+unset dir

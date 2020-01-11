@@ -1,8 +1,4 @@
-#!/bin/bash
-
-#########################################################################
-# This file is managed centrally, any manual changes might be overwritten
-#########################################################################
+#!/bin/zsh
 
 # Create a new directory and enter it
 function mkd() {
@@ -36,7 +32,6 @@ function server() {
 # (Requires PHP 5.4.0+.)
 function phpserver() {
 	local port="${1:-4000}"
-	local ip="10.100.70.102"
 	sleep 1 && open "http://localhost:${port}/" &&  php -S "localhost:${port}";
 }
 
