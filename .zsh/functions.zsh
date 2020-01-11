@@ -52,3 +52,19 @@ function git_subrepo_status() {
 		done
 	fi
 }
+
+# Move a file to the trash
+function d() {
+	mv $1 ~/.Trashes/
+}
+
+# Add to PATH
+function addpath() {
+	[[ ! $1 ]] && echo "Please specify a path to add"
+
+	# Create paths file if it doesn't exist
+	[[ -f ~/.paths ]] || echo "#!/bin/zsh\n" > ~/.paths
+
+	# Add path
+	echo 'export PATH="$PATH:'$1'"' >> ~/.paths
+}
