@@ -2,6 +2,9 @@
 
 printf "\nInstalling\n----------\n\n"
 
+echo "Switch to zsh"
+chsh -s /bin/zsh
+
 # Set the base directory
 dir=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
