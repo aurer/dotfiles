@@ -16,4 +16,4 @@ unset dir
 
 # Set prompt
 if [[ "$EUID" == 0 ]]; then usercolor=$red; else usercolor=$cyan; fi
-PS1='$cyan%m$white:$usercolor%n $blue%~ $(git_prompt)$uc➔ $white'
+PS1='$cyan%m$reset:$usercolor%n $blue%~ $(git_prompt)$uc➔ $reset'
