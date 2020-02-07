@@ -32,3 +32,13 @@ setopt hist_reduce_blanks
 
 # enable substring on prompt so git_status runs every time
 setopt prompt_subst
+
+setopt auto_menu
+
+setopt no_always_last_prompt
+
+setopt auto_list 
+
+# setopt list_types’
+
+# setopt list_rows_first
