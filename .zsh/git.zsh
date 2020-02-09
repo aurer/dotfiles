@@ -22,7 +22,7 @@ function _git_status() {
 	# # Don't split on whitespace characters
 	ORIGINAL_IFS="${IFS}";
 	IFS=$'\n';
-	
+
 	# Loop git status
 	for line in $(git status -s --porcelain 2>/dev/null); do
     # Count staged items
@@ -87,7 +87,7 @@ function _git_status() {
 		result+=$cyan"$unstaged$reset";
   fi
   if [[ -n "$staged" ]]; then
-		result="[$staged] $result$reset";
+		result="[$staged]$result$reset";
   fi
 
 	# Return output
@@ -95,41 +95,57 @@ function _git_status() {
 }
 
 # Return branch being ahead or behind the remote
-function _git_position() {
+function git_pos() {
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||');
     local ahead=$(git rev-list --left-right $branch...origin/$branch 2>/dev/null | grep -c '^<' | tr -d ' ');
     local behind=$(git rev-list --left-right $branch...origin/$branch 2>/dev/null | grep -c '^>' | tr -d ' ');
     local pos="";
     if [[ "$ahead" -gt 0 ]]; then pos+="↑$ahead"; fi
     if [[ "$behind" -gt 0 ]]; then pos+="↓$behind"; fi
-    if [[ "$pos" != "" ]]; then echo $blue$pos; fi
+    if [[ "$pos" != "" ]]; then echo "$blue$pos"; fi
 }
 
 # Compile git prompt using branch, status and position
 function git_prompt() {
     # check if we're in a git repo
-    git rev-parse --is-inside-work-tree &>/dev/null || return
+    git rev-parse &>/dev/null || return;
 
-    # Add tag info if available
+    # check if we're not in a .git folder in the repo
+    [[ $(git rev-parse --is-inside-work-tree) == 'false' ]] && return;
+
+    # Get curent branch
+    local statusColor=$green;
     local branch=$(git symbolic-ref -q HEAD | sed -e 's|^refs/heads/||')
-    local tag=$(git describe 2>/dev/null)
-    if [[ -n "$tag" ]]; then
-      branch="$branch$orange#$tag$reset"
-    fi
 
-    # Color based on number of changes
-    local state=$(_git_status);
-    if [[ -z "$state" ]]; then
-      result=$green"$branch"$reset
-    else
-      result="$orange$branch$reset $state";
+    # If branch is empty find hash
+    if [[ -z "$branch" ]]; then
+      warning="$red DETACHED HEAD$reset"
+      statusColor=$orange;
+      branch="$grey#"$(git rev-parse --short HEAD)$reset;
+
+      local tag=$(git describe --tags 2>/dev/null)
+      if [[ -n "$tag" ]]; then
+        branch="$grey@$tag$reset"
+      fi
     fi
 
     # Check for stashes
     local stashes=$(git stash list | wc -l | tr -d ' ')
     if [[ "$stashes" != "0" ]]; then
-      result+="$orange ⚑$stashes$reset";
+      stashes="$orange ⚑$stashes$reset";
+    else
+      stashes=""
     fi
 
-    echo $result $(_git_position)$reset;
+    # # Color based on number of changes
+    local state=$(_git_status);
+    # local color;
+    if [[ -n "$state" ]]; then
+      statusColor=$orange;
+      state=" $state"
+    fi
+
+    result="$statusColor$branch$(git_pos)$state$stashes$reset"
+
+    echo "$statusColor($reset$result$statusColor)$warning$reset";
 }
