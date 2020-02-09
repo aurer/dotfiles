@@ -2,6 +2,11 @@
 
 printf "\nInstalling\n----------\n\n"
 
+if [[ ! -a /bin/zsh ]]; then
+	echo "Required binary '/bin/zsh' is not installed";
+	return 1;
+fi
+
 echo "Switch to zsh"
 chsh -s /bin/zsh
 
