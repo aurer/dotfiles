@@ -34,10 +34,21 @@ if [[ ! $(git config user.email) ]]; then
 fi
 
 install_with_oh_my_zsh () {
-	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
+	# Install oh-my-zsh
+	if [[ ! -d ~/.oh-my-zsh ]]; then
+		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
+	fi
+
+	# Install autosuggestions plugin
+	if [[ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]]; then
+		git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions;
+	fi
+	
+	# Add custom .zshrc, theme and plugin
 	cp -i $DOTFILES/.zshrc.oh-my-zsh ~/.zshrc;
 	cp -ir $DOTFILES/.oh-my-zsh/custom/plugins/git-prompt ~/.oh-my-zsh/custom/plugins/;
 	cp -i $DOTFILES/.oh-my-zsh/custom/themes/aurer.zsh-theme ~/.oh-my-zsh/custom/themes/;
+	source ~/.zshrc;
 }
 
 install_without_oh_my_zsh () {

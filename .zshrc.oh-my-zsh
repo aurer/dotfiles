@@ -8,7 +8,7 @@ ENABLE_CORRECTION="true"
 COMPLETION_WAITING_DOTS="false"
 
 # Load plugins
-plugins=(git git-prompt)
+plugins=(git git-prompt zsh-autosuggestions)
 
 # Custom aliases
 alias gs="git status -sb"
