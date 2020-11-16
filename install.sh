@@ -23,13 +23,13 @@ fi
 
 # Check for git user.name
 if [[ ! $(git config user.name) ]]; then
-	read -p "Git user.name: " username;
+	read "?Git user.name: " username;
 	git config --global user.name "$username";
 fi
 
 # Check for git user.email
 if [[ ! $(git config user.email) ]]; then
-	read -p "Git user.email: " email;
+	read "?Git user.email: " email;
 	git config --global user.email "$email";
 fi
 
@@ -52,7 +52,6 @@ install_with_oh_my_zsh () {
 }
 
 install_without_oh_my_zsh () {
-
 	# Install files
 	for file in .{zshrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
 		# Backup existing files
