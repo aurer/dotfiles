@@ -1,16 +1,18 @@
-#!/bin/zsh
+# Path to your oh-my-zsh installation.
+export ZSH="$HOME/.oh-my-zsh"
 
-#########################################################################
-# This file is managed centrally, any manual changes might be overwritten
-#########################################################################
+# Set flags
+ZSH_THEME="aurer"
+HYPHEN_INSENSITIVE="true"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="false"
 
-# Load the shell dotfiles
-dir=$(dirname $(readlink ~/.zshrc))
-for f in .zsh/{options,aliases,colors,git,functions,prompt}.zsh; do
-	[[ -r "$dir/$f" ]] && [[ -f "$dir/$f" ]] && source "$dir/$f"
-done
-unset f
-unset dir
+# Load plugins
+plugins=(git git-prompt zsh-autosuggestions)
 
-# Load custom paths
-[[ -f ~/.paths ]] && source ~/.paths
+# Custom aliases
+alias gs="git status -sb"
+
+# Load oh-my-zsh
+source $ZSH/oh-my-zsh.sh
+export PATH=$PATH:~/.npm-global/bin

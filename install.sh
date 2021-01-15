@@ -15,12 +15,6 @@ fi
 # Set the base directory
 DOTFILES=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
-# Add include for gitconfig
-touch ~/.gitconfig
-if ! grep -Fq "$DOTFILES/.zsh" ~/.gitconfig; then
-	printf "\n\n[include]\n  path = $DOTFILES/.zsh/.gitconfig\n\n" >> ~/.gitconfig
-fi
-
 # Check for git user.name
 if [[ ! $(git config user.name) ]]; then
 	read "?Git user.name: " username;
@@ -32,6 +26,24 @@ if [[ ! $(git config user.email) ]]; then
 	read "?Git user.email: " email;
 	git config --global user.email "$email";
 fi
+
+# Install useful files
+for file in .{gitignore,vim,vimrc,wgetrc}; do
+	# Backup existing files
+	if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
+		mv ~/$file ~/$file.orig;
+		echo "Moved ~/$file to ~/$file.orig"
+	fi;
+
+	# Remove existing symlinks
+	if [ -L ~/$file ]; then
+		rm -rf ~/$file;
+	fi;
+
+	# Create the symlink
+	ln -sf $DOTFILES/$file ~/$file;
+done;
+unset file
 
 install_with_oh_my_zsh () {
 	# Install oh-my-zsh
@@ -46,6 +58,7 @@ install_with_oh_my_zsh () {
 	
 	# Add custom .zshrc, theme and plugin
 	cp -i $DOTFILES/.zshrc.oh-my-zsh ~/.zshrc;
+	cp -i $DOTFILES/.oh-my-zsh/custom/*.zsh ~/.oh-my-zsh/custom/;
 	cp -ir $DOTFILES/.oh-my-zsh/custom/plugins/git-prompt ~/.oh-my-zsh/custom/plugins/;
 	cp -i $DOTFILES/.oh-my-zsh/custom/themes/aurer.zsh-theme ~/.oh-my-zsh/custom/themes/;
 	source ~/.zshrc;
@@ -53,27 +66,22 @@ install_with_oh_my_zsh () {
 
 install_without_oh_my_zsh () {
 	# Install files
-	for file in .{zshrc,inputrc,gitignore,vim,vimrc,wgetrc}; do
+	for file in .{zshrc}; do
 		# Backup existing files
 		if [ -f ~/$file -o -d ~/$file ] && [ ! -L ~/$file ]; then
 			mv ~/$file ~/$file.orig;
 			echo "Moved ~/$file to ~/$file.orig"
 		fi;
 
-		# Remove existing symlinks
-		if [ -L ~/$file ]; then
-			rm -rf ~/$file;
-		fi;
-
 		# Create the symlink
-		ln -sf $DOTFILES/$file ~/$file;
+		cp -i $DOTFILES/$file ~/$file;
 	done;
 	unset file
 }
 
 # Select install type
 while true; do
-    echo -n "Install oh-my-zsh? (y/n) "
+    echo -n "Use oh-my-zsh? (y/n) "
 		read yn
     case $yn in
         [Yy]* ) install_with_oh_my_zsh; break;;
