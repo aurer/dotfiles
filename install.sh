@@ -51,17 +51,18 @@ install_with_oh_my_zsh () {
 		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)";
 	fi
 
-	# Install autosuggestions plugin
-	if [[ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions ]]; then
-		git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions;
-	fi
+	# Install zsh-user plugins
+	plugins=('zsh-autosuggestions' 'zsh-syntax-highlighting');
+	for plugin in $plugins; do
+		if [[ ! -d ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/$plugin ]]; then
+			git clone https://github.com/zsh-users/$plugin.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/$plugin;
+		fi
+	done;
+	unset plugins;
 	
-	# Add custom .zshrc, theme and plugin
+	# Add custom .zshrc, themes and plugins
 	cp -i $DOTFILES/.zshrc.oh-my-zsh ~/.zshrc;
-	cp -i $DOTFILES/.oh-my-zsh/custom/*.zsh ~/.oh-my-zsh/custom/;
-	cp -ir $DOTFILES/.oh-my-zsh/custom/plugins/git-prompt ~/.oh-my-zsh/custom/plugins/;
-	cp -i $DOTFILES/.oh-my-zsh/custom/themes/aurer.zsh-theme ~/.oh-my-zsh/custom/themes/;
-	source ~/.zshrc;
+	rsync -av $DOTFILES/.oh-my-zsh/custom/ ~/.oh-my-zsh/custom/
 }
 
 install_without_oh_my_zsh () {
