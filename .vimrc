@@ -46,6 +46,9 @@ set number
 " Enable syntax highlighting
 syntax on
 
+" Set colorscheme
+colorscheme jummi
+
 " Highlight current line
 set cursorline
 
@@ -103,6 +106,16 @@ noremap <leader>ss :call StripWhitespace()<CR>
 " Save a file as root (,W)
 noremap <leader>W :w !sudo tee % > /dev/null<CR>
 
+" Configure sidebar
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+augroup ProjectDrawer
+  autocmd!
+  autocmd VimEnter * :Vexplore
+augroup END
 
 " Automatic commands
 if has("autocmd")
@@ -111,3 +124,10 @@ if has("autocmd")
 	" Treat .json files as .js
 	autocmd BufNewFile,BufRead *.json setfiletype json syntax=javascript
 endif
+
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+
+call plug#end()
