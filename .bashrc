@@ -11,3 +11,6 @@ export TERM=xterm-256color
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
+
+[ -f ~/.profile ] && source ~/.profile
+
