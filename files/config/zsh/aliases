@@ -1,0 +1,49 @@
+#!/bin/zsh
+
+# Enable aliases to be sudo’ed
+alias sudo='sudo '
+
+# Easier navigation: .., ..., ...., ....., ~ and -
+alias -- -="cd -"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then # GNU `ls`
+	color="--color"
+else # OS X `ls`
+	color="-G"
+fi
+
+# List all files colorized in long format
+alias ll="ls -lFh $color"
+
+# List all files colorized in long format, including dot files
+alias la="ls -laFh $color"
+
+# List only directories
+alias lsd="ls -lF | grep --color=never '^d'"
+
+
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="source ~/.zshrc && exec $SHELL -l"
+
+# Default ping to 5 pings and shorter timeout
+alias ping='ping -c 5 -t 3'
+
+# Git shortcuts
+alias g="git"
+alias gs="git status -s"
+alias ga="git add"
+alias gb="git branch"
+alias gc="git commit"
+alias gf="git fetch origin"
+alias gd="git diff"
+alias gp="git push"
+
+# Programs
+alias v="vim"
+alias m="micro"

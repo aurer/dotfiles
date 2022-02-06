@@ -1,0 +1,14 @@
+[core]
+	excludesfile = ~/.config/git/ignore
+
+[init]
+	defaultBranch = main
+
+[pull]
+	ff = only
+
+[color]
+	status = auto
+	branch = auto
+	interactive = auto
+	diff = auto
