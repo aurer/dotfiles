@@ -26,6 +26,7 @@ cp $BASEDIR/files/config/micro/* ~/.config/micro/
 
 # Setup vim
 echo "Setup vim"
+mkdir -p ~/.vim
 cp -r $BASEDIR/files/vim/* ~/.vim/
 
 # Check for git user.name
