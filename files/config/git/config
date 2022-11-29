@@ -12,3 +12,8 @@
 	branch = auto
 	interactive = auto
 	diff = auto
+
+[alias]
+	hide = update-index --assume-unchanged
+	unhide = update-index --no-assume-unchanged
+	hidden = !git ls-files -v | grep '^[a-z]' | cut -c3-
