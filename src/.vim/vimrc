@@ -1,6 +1,7 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" This file is managed centrally, any manual changes might be overwritten
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable syntax highlighting
+syntax enable
+colorscheme paper
+
 " Make Vim more useful
 set nocompatible
 
@@ -43,10 +44,6 @@ set secure
 " Enable line numbers
 set number
 
-" Enable syntax highlighting
-syntax enable
-colorscheme flattened_dark
-
 " Highlight current line
 set cursorline
 
@@ -73,6 +70,9 @@ set nostartofline
 
 " Show the cursor position
 set ruler
+
+" Show line numbers
+set number
 
 " Show the current mode
 set showmode
@@ -114,4 +114,4 @@ if has("autocmd")
 endif
 
 " Set custom viminfo path
-set viminfo+=n~/.vim/viminfo
+set viminfo+=n~/.vim/viminfo[201~]]

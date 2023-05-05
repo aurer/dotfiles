@@ -1,5 +1,6 @@
 [core]
 	excludesfile = ~/.config/git/ignore
+    hooksPath = ~/.config/git/hooks
 
 [init]
 	defaultBranch = main
@@ -12,6 +13,9 @@
 	branch = auto
 	interactive = auto
 	diff = auto
+
+[format]
+    pretty = %C(auto)%h:%an %an %d %s
 
 [alias]
 	hide = update-index --assume-unchanged

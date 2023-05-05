@@ -1,21 +1,18 @@
-#!/bin/zsh
-
-# Enable colors
-autoload -U colors && colors
-
-# Hstory
+# History size
+HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-if [ ! -d ~/.cache/zsh ]; then 
-	mkdir -p ~/.cache/zsh/
-fi
-HISTFILE=~/.cache/zsh/history
-SHELL_SESSIONS_DISABLE=1
-unsetopt share_history
+
+# Extended glob
+setopt autocd extendedglob
+
+# Emacs style kiybindings
+bindkey -e
 
 # Autocomplete
-autoload -U compinit
 zstyle ':completion:*' menu select
+autoload -Uz compinit
+compinit
 zmodload zsh/complist
 _comp_options+=(globdots)
 
@@ -29,19 +26,11 @@ for package in zsh-autosuggestions zsh-syntax-highlighting; do
 done
 
 # Config
-[ -f ~/.config/zsh/aliases ] && source ~/.config/zsh/aliases
-[ -f ~/.config/zsh/functions ] && source ~/.config/zsh/functions
-[ -f ~/.config/zsh/git-prompt ] && source ~/.config/zsh/git-prompt
-
-# Prompt
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-setopt PROMPT_SUBST
-PROMPT='%(!:%F{red}%n:%F{cyan}%n)'
-PROMPT+='%F{8}@%F{blue}%m'
-PROMPT+='%F{8}:%F{magenta}%3~'
-PROMPT+='$(git_prompt)'
-PROMPT+='
-%(?..%F{red}!)%(!:%F{red}❯:%F{cyan}❯)%f '
+source ~/.config/zsh/aliases
+source ~/.config/zsh/functions
 
 # Include profile if available
 [ -f ~/.profile ] && source ~/.profile
+
+# Enable starship
+eval "$(starship init zsh)"

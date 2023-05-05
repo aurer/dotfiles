@@ -27,7 +27,6 @@ alias la="ls -laFh $color"
 # List only directories
 alias lsd="ls -lF | grep --color=never '^d'"
 
-
 # Reload the shell (i.e. invoke as a login shell)
 alias reload="source ~/.zshrc && exec $SHELL -l"
 

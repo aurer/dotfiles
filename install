@@ -1,57 +1,53 @@
 #!/bin/bash
+set -e
 
-# Check for zsh
-if [ "$SHELL" != "/bin/zsh" ]; then 
-	echo "It looks like your not using zsh, please install this before continuing"
-	exit 1
+if [ ! -f "/bin/zsh" ]; then
+    echo "please install zsh before continuing"
+    exit 1
 fi
 
 # Set the base directory
 BASEDIR=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 
-# Create required folders
-echo "Create required folders"
-mkdir -p ~/.config/zsh
-mkdir -p ~/.cache/zsh
-
-# Install zsh configuration
-echo "Install zsh configuation"
-cp -R $BASEDIR/src/config/zsh/* ~/.config/zsh/
-cp $BASEDIR/src/zshrc ~/.zshrc
-
-# Install micro configuration
-echo "Install micro configuration"
-mkdir -p ~/.config/micro
-cp $BASEDIR/src/config/micro/* ~/.config/micro/
-
-# Setup vim
-echo "Setup vim"
-mkdir -p ~/.vim
-cp -r $BASEDIR/src/vim/* ~/.vim/
-
-# Check for git user.name
-echo "Configure git"
-
-# Copy configs
-mkdir -p ~/.config/git
-cp -r $BASEDIR/src/config/git/* ~/.config/git/
-
-# Include config
-if [ ! -f ~/.gitconfig ]; then 
-	printf "[include]\n  path = ~/.config/git/config\n\n" > ~/.gitconfig
+# Install starship
+if ! command -v starship &> /dev/null
+then
+    echo "Install starship (https://starship.rs/)"
+    sudo dnf copr enable -y atim/starship
+    sudo dnf install -y starship
 fi
 
-# Set user.name
+## Configure git
+# Add include for main config
+if [ ! -f ~/.gitconfig ] || ! (grep -q "config/git/config" ~/.gitconfig); then
+    echo "add include for main config to .gitconfig"
+    printf "[include]\n  path = ~/.config/git/config\n\n" >> ~/.gitconfig
+fi
+
+# Set username
 if [[ ! $(git config user.name) ]]; then
 	read -p "Git user.name: " name;
 	git config --global user.name "$name";
 fi
 
-# Set user.email
+# Set email
 if [[ ! $(git config user.email) ]]; then
 	read -p "Git user.email: " email;
 	git config --global user.email "$email";
 fi
 
-echo "Done"
+# Copy all configs and other dotfiles
+echo "sync files..."
+rsync --verbose --archive --ignore-times "$BASEDIR/src/" ~/
+
+if [ "$SHELL" != "/bin/zsh" ]; then
+    echo "change shell to zsh"
+    chsh -s /bin/zsh
+    /bin/zsh
+    source ~/.zshrc
+fi
+
+echo "----"
+echo "done"
+echo "----"
 unset BASEDIR
