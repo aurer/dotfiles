@@ -16,25 +16,25 @@ mkdir -p ~/.cache/zsh
 
 # Install zsh configuration
 echo "Install zsh configuation"
-cp -R $BASEDIR/files/config/zsh/* ~/.config/zsh/
-cp $BASEDIR/files/zshrc ~/.zshrc
+cp -R $BASEDIR/src/config/zsh/* ~/.config/zsh/
+cp $BASEDIR/src/zshrc ~/.zshrc
 
 # Install micro configuration
 echo "Install micro configuration"
 mkdir -p ~/.config/micro
-cp $BASEDIR/files/config/micro/* ~/.config/micro/
+cp $BASEDIR/src/config/micro/* ~/.config/micro/
 
 # Setup vim
 echo "Setup vim"
 mkdir -p ~/.vim
-cp -r $BASEDIR/files/vim/* ~/.vim/
+cp -r $BASEDIR/src/vim/* ~/.vim/
 
 # Check for git user.name
 echo "Configure git"
 
 # Copy configs
 mkdir -p ~/.config/git
-cp -r $BASEDIR/files/config/git/* ~/.config/git/
+cp -r $BASEDIR/src/config/git/* ~/.config/git/
 
 # Include config
 if [ ! -f ~/.gitconfig ]; then 
