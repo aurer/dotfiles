@@ -2,36 +2,40 @@
 set -e
 
 if [ ! -f "/bin/zsh" ]; then
-    echo "please install zsh before continuing"
-    exit 1
+	echo "please install zsh before continuing"
+	exit 1
 fi
 
 # Set the base directory
-BASEDIR=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
+BASEDIR=$(cd "$(dirname "${BASH_SOURCE}")" && pwd)
 
 # Install starship
-if ! command -v starship &> /dev/null
-then
-    curl -sS https://starship.rs/install.sh | sh
+if ! command -v starship &>/dev/null; then
+	curl -sS https://starship.rs/install.sh | sh
+fi
+
+# Move existing profile to zprofile
+if [ -f ~/.profile ]; then
+	mv ~/.profile ~/.zprofile
 fi
 
 ## Configure git
 # Add include for main config
 if [ ! -f ~/.gitconfig ] || ! (grep -q "config/git/config" ~/.gitconfig); then
-    echo "add include for main config to .gitconfig"
-    printf "[include]\n  path = ~/.config/git/config\n\n" >> ~/.gitconfig
+	echo "add include for main config to .gitconfig"
+	printf "[include]\n  path = ~/.config/git/config\n\n" >>~/.gitconfig
 fi
 
 # Set username
 if [[ ! $(git config user.name) ]]; then
-	read -p "Git user.name: " name;
-	git config --global user.name "$name";
+	read -p "Git user.name: " name
+	git config --global user.name "$name"
 fi
 
 # Set email
 if [[ ! $(git config user.email) ]]; then
-	read -p "Git user.email: " email;
-	git config --global user.email "$email";
+	read -p "Git user.email: " email
+	git config --global user.email "$email"
 fi
 
 # Copy all configs and other dotfiles
@@ -39,10 +43,10 @@ echo "sync files..."
 rsync --verbose --archive --ignore-times "$BASEDIR/src/" ~/
 
 if [ "$SHELL" != "/bin/zsh" ]; then
-    echo "change shell to zsh"
-    chsh -s /bin/zsh
-    /bin/zsh
-    source ~/.zshrc
+	echo "change shell to zsh"
+	chsh -s /bin/zsh
+	/bin/zsh
+	source ~/.zshrc
 fi
 
 echo "----"

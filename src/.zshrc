@@ -1,5 +1,6 @@
 # History size
-HISTFILE=~/.histfile
+SHELL_SESSIONS_DISABLE=1
+HISTFILE=~/.config/zsh/histfile
 HISTSIZE=1000
 SAVEHIST=1000
 
@@ -20,7 +21,7 @@ _comp_options+=(globdots)
 for package in zsh-autosuggestions zsh-syntax-highlighting; do
 	for dir in /usr/share /usr/local/share; do
 		if [ -f "$dir/$package/$package.zsh" ]; then
-			source "$dir/$package/$package.zsh";
+			source "$dir/$package/$package.zsh"
 		fi
 	done
 done
