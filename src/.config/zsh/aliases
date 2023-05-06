@@ -42,6 +42,7 @@ alias gc="git commit"
 alias gf="git fetch origin"
 alias gd="git diff"
 alias gp="git push"
+alias gl="git log -10"
 
 # Programs
 alias v="vim"
