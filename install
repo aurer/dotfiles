@@ -12,9 +12,7 @@ BASEDIR=$( cd "$( dirname "${BASH_SOURCE}" )" && pwd );
 # Install starship
 if ! command -v starship &> /dev/null
 then
-    echo "Install starship (https://starship.rs/)"
-    sudo dnf copr enable -y atim/starship
-    sudo dnf install -y starship
+    curl -sS https://starship.rs/install.sh | sh
 fi
 
 ## Configure git
