@@ -30,8 +30,8 @@ done
 source ~/.config/zsh/aliases
 source ~/.config/zsh/functions
 
-# Include profile if available
-[ -f ~/.profile ] && source ~/.profile
+# Include zprofile if available
+[ -f ~/.zprofile ] && source ~/.zprofile
 
 # Enable starship
 eval "$(starship init zsh)"
