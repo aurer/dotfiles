@@ -16,3 +16,8 @@ function fs() {
 		du $arg .[^.]* *
 	fi
 }
+
+# Show the $PATH split into lines
+function path() {
+	echo "$PATH" | sed 's/:/\n/g'
+}
