@@ -14,9 +14,10 @@ if ! command -v starship &>/dev/null; then
 	curl -sS https://starship.rs/install.sh | sh
 fi
 
-# Move existing profile to zprofile
+# Copy existing profile to zprofile
 if [ -f ~/.profile ]; then
-	mv ~/.profile ~/.zprofile
+	echo "" >> /tmp/.zprofile
+	cat ~/.profile ~ >> ~/.zprofile
 fi
 
 ## Configure git
