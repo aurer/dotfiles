@@ -6,7 +6,11 @@
 	defaultBranch = main
 
 [pull]
-	ff = only
+	rebase = true
+
+[push]
+	default = current
+	autoSetupRemote = true
 
 [color]
 	status = auto
@@ -17,7 +21,35 @@
 [format]
 	pretty = %C(auto)%h:%an %an %d %s
 
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+
 [alias]
 	hide = update-index --assume-unchanged
 	unhide = update-index --no-assume-unchanged
 	hidden = !git ls-files -v | grep '^[a-z]' | cut -c3-
+
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	renames = true
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[help]
+	autocorrect = prompt
+
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true

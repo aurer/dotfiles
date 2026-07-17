@@ -3,31 +3,35 @@ set -e
 
 # Check for required apps
 for app in zsh curl git rsync; do
-	if [ ! $(command -v "$app" 2>&1 /dev/null) ]; then
+	if ! command -v "$app" >/dev/null 2>&1; then
 		echo "please install ${app} before continuing"
 		exit 1
 	fi
 done
 
 # Set the base directory
-BASEDIR=$(cd "$(dirname "${BASH_SOURCE}")" && pwd)
+BASEDIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Install starship
 if ! command -v starship &>/dev/null; then
 	curl -sS https://starship.rs/install.sh | sh
 fi
 
-# Copy existing profile to zprofile
-if [ -f ~/.profile ]; then
-	echo "" >> /tmp/.zprofile
-	cat ~/.profile >> ~/.zprofile
+# Copy existing profile to zprofile (only once)
+if [ -f ~/.profile ] && ! grep -qs "migrated from ~/.profile" ~/.zprofile; then
+	echo "migrate ~/.profile to ~/.zprofile"
+	{
+		echo ""
+		echo "# migrated from ~/.profile"
+		cat ~/.profile
+	} >> ~/.zprofile
 fi
 
 ## Configure git
 # Add include for main config
-if [ ! -f ~/.gitconfig ] || ! (grep -q "config/git/config" ~/.gitconfig); then
-	echo "add include for main config to .gitconfig"
-	printf "[include]\n  path = ~/.config/git/config\n\n" >>~/.gitconfig
+if ! grep -qs "config/git/config" ~/.gitconfig; then
+    echo "add include for main config to .gitconfig"
+    printf '[include]\n\tpath = ~/.config/git/config\n\n%s' "$(cat ~/.gitconfig 2>/dev/null)" > ~/.gitconfig
 fi
 
 # Set username
@@ -42,15 +46,39 @@ if [[ ! $(git config user.email) ]]; then
 	git config --global user.email "$email"
 fi
 
-# Copy all configs and other dotfiles
-echo "sync files..."
-rsync --verbose --archive --ignore-times "$BASEDIR/src/" ~/
+# Symlink all configs and other dotfiles (backing up any existing real files)
+echo "linking files..."
+while IFS= read -r -d '' src; do
+	rel=${src#"$BASEDIR/src/"}
+	dest=~/$rel
 
-if [ "$SHELL" != "/bin/zsh" ]; then
-	echo "change shell to zsh"
-	chsh -s /bin/zsh
-	/bin/zsh
-	source ~/.zshrc
+	# If the correct symlink already exists, skip
+	if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+		continue
+	fi
+
+	# Ensure the parent directory exists as a real directory
+	mkdir -p "$(dirname "$dest")"
+
+	# Back up any existing real file (not our own symlink) before replacing
+	if [ -e "$dest" ] && [ ! -L "$dest" ]; then
+		echo "backing up existing $dest to $dest.bak"
+		mv "$dest" "$dest.bak"
+	fi
+
+	echo "link $rel"
+	ln -sfn "$src" "$dest"
+done < <(find "$BASEDIR/src" -type f -print0)
+
+# Change the login shell to zsh
+ZSH_PATH=$(command -v zsh)
+if [ "$SHELL" != "$ZSH_PATH" ]; then
+	echo "change shell to $ZSH_PATH"
+	if ! grep -qs "^${ZSH_PATH}\$" /etc/shells; then
+		echo "$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null
+	fi
+	chsh -s "$ZSH_PATH"
+	echo "shell changed to zsh; it will take effect in your next login session"
 fi
 
 echo "----"
